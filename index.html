@@ -8,39 +8,18 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        /* إعدادات الخطوط والخلفية */
-        body { 
-            margin: 0; 
-            font-family: 'Tajawal', sans-serif; /* الخط الأساسي */
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); /* خلفية أغمق شوية لإبراز الفورم */
-            color: #333; 
-            overflow-x: hidden; 
-        }
-        h2, h3, h4 { font-family: 'Amiri', serif; /* خط العناوين الكلاسيكي */ }
+        body { margin: 0; font-family: 'Tajawal', sans-serif; background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: #333; overflow-x: hidden; }
+        h2, h3, h4 { font-family: 'Amiri', serif; }
         
-        /* خلفية الفقاعات (تم التعديل لتظهر على الموبايل) */
         .bubbles { position: fixed; width: 100%; height: 100%; z-index: -1; top:0; left:0; pointer-events: none; }
         .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; animation: rise 10s infinite ease-in; }
         @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1500px) scale(1.5); } }
         
-        /* تنسيق الفورم (تأثير الزجاج لشفافية أفضل) */
-        .container { 
-            max-width: 600px; 
-            margin: 40px auto; 
-            background: rgba(255, 255, 255, 0.85); /* شفافية الفورم */
-            backdrop-filter: blur(8px); /* تأثير الزجاج */
-            -webkit-backdrop-filter: blur(8px);
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
+        .container { max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         h2 { text-align: center; color: #1e3c72; font-size: 32px; margin-bottom: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #111; }
-        input[type="text"], input[type="number"], select { 
-            width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; 
-            box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px;
-        }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px; }
         input:focus, select:focus { border-color: #1e3c72; outline: none; box-shadow: 0 0 8px rgba(30, 60, 114, 0.3); }
         
         .email-group { display: flex; gap: 10px; direction: ltr; }
@@ -48,41 +27,38 @@
         .email-group span { margin-top: 10px; font-weight: bold; font-size: 18px; color: #555; }
         .email-group select { flex: 1; }
         
-        /* تنسيقات الأخطاء */
         .invalid-input { border: 2px solid #dc3545 !important; background-color: #fff8f8; }
         .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        /* الاختيارات الـ 7 (تم التعديل لتكون تحت بعضها) */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
-        .choice-card { 
-            border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; 
-            background: rgba(249, 249, 249, 0.9); font-weight: 500; font-size: 16px; 
-            transition: all 0.3s ease; display: flex; align-items: center; color: #222;
-        }
+        .choice-card { border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; background: rgba(249, 249, 249, 0.9); font-weight: 500; font-size: 16px; transition: all 0.3s ease; display: flex; align-items: center; color: #222; }
         .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateX(-5px); }
         .choice-card input { margin-left: 15px; transform: scale(1.3); cursor: pointer; }
 
-        button { 
-            width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; 
-            border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; 
-            font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px;
-        }
+        button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; }
         button:hover { background: #152b52; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-        /* منطقة الباركود */
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 2px dashed #ccc; padding-top: 20px; }
-        #ticketCard { background: white; padding: 20px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        #ticketCard { background: white; padding: 30px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         #downloadBtn { background: #28a745; font-size: 18px; }
         #downloadBtn:hover { background: #218838; }
+        .ticket-note { font-size: 20px; color: #1e3c72; font-weight: bold; margin-bottom: 15px; }
 
-        /* تظبيط مقاسات الموبايل */
+        /* ستايل النافذة العائمة الكلاسيكية (تمت إضافتها) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; border: 6px double #1e3c72; padding: 30px 20px; border-radius: 10px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .modal-box h3 { color: #d9534f; margin-top: 0; font-size: 28px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
+        .modal-box p { font-size: 18px; font-weight: bold; margin-bottom: 25px; color: #333; line-height: 1.5; }
+        .modal-btn { background: #b8860b; /* لون ذهبي كلاسيكي */ color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
+        .modal-btn:hover { background: #997009; }
+
         @media (max-width: 600px) {
             .container { margin: 20px 15px; padding: 20px; }
             h2 { font-size: 26px; }
             .choice-card { font-size: 15px; padding: 12px; }
             .email-group { flex-direction: column; direction: rtl; }
             .email-group input { text-align: right; }
-            .email-group span { display: none; } /* إخفاء علامة @ في الموبايل لتوفير المساحة أو تعديل شكلها */
+            .email-group span { display: none; }
         }
     </style>
 </head>
@@ -96,6 +72,14 @@
         <div class="bubble" style="width:50px; height:50px; left:50%; animation-duration:10s; animation-delay:1s;"></div>
     </div>
 
+    <div class="modal-overlay" id="duplicateModal">
+        <div class="modal-box">
+            <h3>عذراً!</h3>
+            <p>تم التسجيل من قبل بهذه البيانات.<br>قم بتحميل إيصالك من هنا.</p>
+            <button class="modal-btn" onclick="closeModalAndDownload()">تحميل الإيصال</button>
+        </div>
+    </div>
+
     <div class="container">
         <h2>منصة الحجز والتسجيل</h2>
         <img src="https://via.placeholder.com/600x200?text=صورة+المنتج+أو+الحدث" alt="click" style="width: 100%; border-radius: 10px; margin-bottom: 25px;">
@@ -104,13 +88,13 @@
             <div class="form-group">
                 <label>Choose:</label>
                 <div class="choices-list">
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 1" data-price="200" required> A</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 2" data-price="200"> B</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 3" data-price="200"> C</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 4" data-price="400"> AB</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 5" data-price="400"> AC</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 6" data-price="400"> BC</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 7" data-price="600"> ABC</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="A" data-price="200" required> A</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="B" data-price="200"> B</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="C" data-price="200"> C</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="AB" data-price="400"> AB</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="AC" data-price="400"> AC</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="BC" data-price="400"> BC</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="ABC" data-price="600"> ABC</label>
                 </div>
             </div>
 
@@ -123,7 +107,7 @@
             <div class="form-group">
                 <label>الرقم القومى:</label>
                 <input type="text" id="nationalId" placeholder="NO.16" maxlength="16" required>
-                <div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه أرقام فقط ويبدأ بـ 2 أو 3.</div>
+                <div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه 16 رقم فقط.</div>
             </div>
 
             <div class="form-group">
@@ -155,11 +139,11 @@
         </form>
 
         <div id="resultArea">
+            <div class="ticket-note">يرجى إبراز التذكرة عند تأكيد الحجز مع المنسق</div>
             <div id="ticketCard">
-                <h3 style="margin-top:0; font-size: 24px; color: #1e3c72;">يرجى ابراز الصورة عند تأكيد الحجز مع المنسق (الحجز)</h3>
                 <svg id="barcode"></svg>
-                <h4 id="displayChoice" style="margin: 15px 0; font-size: 20px;"></h4>
-                <h4 id="displayPrice" style="color: #d9534f; font-size: 20px;"></h4>
+                <h4 id="displayChoice" style="margin: 15px 0; font-size: 26px; font-weight: bold; color: #111;"></h4>
+                <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
             <br>
             <button id="downloadBtn" onclick="downloadTicket()">Download</button>
@@ -167,7 +151,14 @@
     </div>
 
     <script>
-        // --- أكواد التحقق الحية (Live Validation) ---
+        function generateRandomCode() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            for (let i = 0; i < 14; i++) code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            return code;
+        }
 
         const nameInput = document.getElementById('fullName');
         const nameError = document.getElementById('nameError');
@@ -185,7 +176,7 @@
         const idError = document.getElementById('idError');
         idInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 0 && !/^[23]/.test(this.value)) {
+            if (this.value.length > 0 && this.value.length !== 16) {
                 this.classList.add('invalid-input');
                 idError.style.display = 'block';
             } else {
@@ -202,8 +193,8 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
         });
 
-        // تم دمج اللينك الخاص بك بنجاح
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHr0DULPXVTRW0_cw0GRiqjPJZxD_UPlgT4UQsjQDOU3FwXg7mznT2MSjwP0mo5y-K6g/exec';
+        // حط اللينك الجديد بتاع الشيت هنا
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -212,12 +203,14 @@
                 alert('عذراً، يجب كتابة الاسم ثلاثي باللغة العربية بشكل صحيح.');
                 return;
             }
-            if (!/^[23][0-9]{10}$/.test(idInput.value)) {
-                alert('عذراً، الرقم القومي يجب أن يكون 11 رقم ويبدأ بـ 2 أو 3.');
+            if (!/^\d{16}$/.test(idInput.value)) {
+                alert('عذراً، يجب إدخال 16 رقم بشكل صحيح.');
                 return;
             }
 
             const selectedChoice = document.querySelector('input[name="itemChoice"]:checked');
+            const uniqueBarcode = generateRandomCode(); 
+
             const data = {
                 itemChoice: selectedChoice.value,
                 price: selectedChoice.getAttribute('data-price'),
@@ -225,47 +218,68 @@
                 nationalId: idInput.value,
                 status: document.getElementById('status').value,
                 emailUser: emailInput.value,
-                emailDomain: document.getElementById('emailDomain').value
+                emailDomain: document.getElementById('emailDomain').value,
+                barcode: uniqueBarcode 
             };
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.innerText = "جاري التحقق والتسجيل...";
             submitBtn.disabled = true;
 
+            // التعديل السحري هنا: شيلنا الـ no-cors عشان نقدر نقرأ رد الشيت
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // استخدام text/plain بيمنع مشاكل الـ CORS المزعجة
+                body: JSON.stringify(data),
+                redirect: 'follow'
             })
-            .then(() => {
-                generateBarcode(data.nationalId, data.itemChoice, data.price);
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'duplicate') {
+                    // لو متسجل، نرسم الباركود القديم مخفي ونطلع النافذة
+                    generateBarcodeUI(result.barcode, result.choiceName, result.price);
+                    document.getElementById('resultArea').style.display = 'none'; // نخفي النتيجة ونطلع النافذة
+                    document.getElementById('duplicateModal').style.display = 'flex';
+                } else {
+                    // لو أول مرة، نرسم الباركود الجديد ونعرضه
+                    generateBarcodeUI(result.barcode, result.choiceName, result.price);
+                }
             })
             .catch(error => {
-                alert('حدث خطأ في الاتصال بقاعدة البيانات.');
-                submitBtn.innerText = "تأكيد الحجز واستخراج الباركود";
+                alert('حدث خطأ، يرجى التأكد من اتصالك بالإنترنت والمحاولة مجدداً.');
+                submitBtn.innerText = "تسجيل الحجز";
                 submitBtn.disabled = false;
             });
         });
 
-        function generateBarcode(id, choice, price) {
+        function generateBarcodeUI(barcodeValue, choice, price) {
             document.getElementById('bookingForm').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
             
-            JsBarcode("#barcode", id, {
+            JsBarcode("#barcode", barcodeValue, {
                 format: "CODE128",
-                width: 2,
-                height: 80,
-                displayValue: true
+                width: 2.5,
+                height: 100,
+                displayValue: false
             });
 
-            document.getElementById('displayChoice').innerText = `الاختيار: ${choice}`;
-            document.getElementById('displayPrice').innerText = `القيمة المطلوبة: ${price} جنيه`;
+            document.getElementById('displayChoice').innerText = `${choice}`;
+            document.getElementById('displayPrice').innerText = `L.E: ${price}`;
+        }
+
+        // دالة تقفيل النافذة العائمة وتحميل الصورة فوراً
+        function closeModalAndDownload() {
+            document.getElementById('duplicateModal').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block'; // نظهر المنطقة عشان يحمل منها
+            downloadTicket();
         }
 
         function downloadTicket() {
             const ticket = document.getElementById('ticketCard');
-            html2canvas(ticket, { scale: 3 }).then(canvas => {
+            html2canvas(ticket, { 
+                scale: 3,
+                backgroundColor: null
+            }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = 'Ticket_' + document.getElementById('nationalId').value + '.png';
                 link.href = canvas.toDataURL('image/png');
