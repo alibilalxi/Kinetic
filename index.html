@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الحجز الكيميائية</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        /* خلفية كيميائية متحركة (فقاعات) */
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #333; overflow-x: hidden; }
+        .bubbles { position: absolute; width: 100%; height: 100%; z-index: -1; overflow: hidden; top:0; left:0; }
+        .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; animation: rise 10s infinite ease-in; }
+        @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1000px) scale(1.5); } }
+        
+        /* تنسيق الفورم */
+        .container { max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        h2 { text-align: center; color: #1e3c72; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .email-group { display: flex; gap: 10px; direction: ltr; }
+        .email-group input { flex: 2; text-align: right; }
+        .email-group span { margin-top: 10px; font-weight: bold; }
+        .email-group select { flex: 1; }
+        
+        /* الاختيارات الـ 7 */
+        .choices-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .choice-card { border: 1px solid #ccc; padding: 10px; border-radius: 5px; cursor: pointer; text-align: center; background: #f9f9f9; }
+        .choice-card:hover { background: #e0eaf5; }
+        .choice-card input { margin-left: 10px; }
+
+        button { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #218838; }
+
+        /* منطقة الباركود */
+        #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 2px dashed #ccc; padding-top: 20px; }
+        #ticketCard { background: white; padding: 20px; border: 2px solid #1e3c72; border-radius: 10px; display: inline-block; margin-bottom: 20px; }
+        #downloadBtn { background: #17a2b8; }
+        #downloadBtn:hover { background: #138496; }
+    </style>
+</head>
+<body>
+
+    <div class="bubbles">
+        <div class="bubble" style="width:40px; height:40px; left:10%; animation-duration:8s;"></div>
+        <div class="bubble" style="width:60px; height:60px; left:30%; animation-duration:12s; animation-delay:2s;"></div>
+        <div class="bubble" style="width:30px; height:30px; left:60%; animation-duration:6s; animation-delay:4s;"></div>
+        <div class="bubble" style="width:80px; height:80px; left:80%; animation-duration:14s;"></div>
+    </div>
+
+    <div class="container">
+        <h2>منصة الحجز</h2>
+        <img src="https://via.placeholder.com/600x200?text=صورة+المنتج+أو+الحدث" alt="صورة توضيحية" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">
+        
+        <form id="bookingForm">
+            <div class="form-group">
+                <label>اختر من القائمة (اختر واحد فقط):</label>
+                <div class="choices-grid">
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 1" data-price="200" required> اختيار 1</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 2" data-price="200"> اختيار 2</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 3" data-price="200"> اختيار 3</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 4" data-price="400"> اختيار 4</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 5" data-price="400"> اختيار 5</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 6" data-price="400"> اختيار 6</label>
+                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 7" data-price="600"> اختيار 7</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>الاسم ثلاثي (باللغة العربية):</label>
+                <input type="text" id="fullName" placeholder="مثال: أحمد محمد علي" pattern="^[\u0621-\u064A\s]+$" required>
+            </div>
+
+            <div class="form-group">
+                <label>رقم التأكيد (الرقم القومي):</label>
+                <input type="text" id="nationalId" placeholder="11 رقم فقط يبدأ بـ 2 أو 3" pattern="^[23][0-9]{10}$" maxlength="11" required>
+            </div>
+
+            <div class="form-group">
+                <label>الحالة الدراسية:</label>
+                <select id="status" required>
+                    <option value="">-- اختر حالتك --</option>
+                    <option value="رابعة (مستجد)">رابعة (مستجد)</option>
+                    <option value="رابعة (باق)">رابعة (باق)</option>
+                    <option value="خريج">خريج</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>البريد الإلكتروني:</label>
+                <div class="email-group">
+                    <select id="emailDomain" required>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="icloud.com">icloud.com</option>
+                        <option value="yahoo.com">yahoo.com</option>
+                        <option value="outlook.com">outlook.com</option>
+                        <option value="hotmail.com">hotmail.com</option>
+                    </select>
+                    <span>@</span>
+                    <input type="text" id="emailUser" placeholder="اسم المستخدم" pattern="^[a-zA-Z0-9._-]+$" required>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">تأكيد الحجز واستخراج الباركود</button>
+        </form>
+
+        <div id="resultArea">
+            <div id="ticketCard">
+                <h3 style="margin-top:0;">تذكرة الحجز</h3>
+                <svg id="barcode"></svg>
+                <h4 id="displayChoice" style="margin: 10px 0;"></h4>
+                <h4 id="displayPrice" style="color: #d9534f;"></h4>
+            </div>
+            <br>
+            <button id="downloadBtn" onclick="downloadTicket()">تحميل الصورة بجودة عالية</button>
+        </div>
+    </div>
+
+    <script>
+        // حط هنا اللينك اللي طلعلك من Google Apps Script مكان كلمة YOUR_WEB_APP_URL_HERE
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHr0DULPXVTRW0_cw0GRiqjPJZxD_UPlgT4UQsjQDOU3FwXg7mznT2MSjwP0mo5y-K6g/exec';
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // التحقق من أن الاسم 3 مقاطع على الأقل
+            const nameWords = document.getElementById('fullName').value.trim().split(' ');
+            if (nameWords.length < 3) {
+                alert('عذراً، يجب كتابة الاسم ثلاثي على الأقل.');
+                return;
+            }
+
+            // تجميع البيانات
+            const selectedChoice = document.querySelector('input[name="itemChoice"]:checked');
+            const data = {
+                itemChoice: selectedChoice.value,
+                price: selectedChoice.getAttribute('data-price'),
+                fullName: document.getElementById('fullName').value,
+                nationalId: document.getElementById('nationalId').value,
+                status: document.getElementById('status').value,
+                emailUser: document.getElementById('emailUser').value,
+                emailDomain: document.getElementById('emailDomain').value
+            };
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "جاري التحقق والتسجيل...";
+            submitBtn.disabled = true;
+
+            // إرسال البيانات لـ Google Sheets
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // لايقاف مشاكل الكروس دومين مؤقتا في التنفيذ السريع
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(() => {
+                // ملاحظة: بسبب no-cors السكربت مش هيرجع Response نقرأه بسهولة هنا
+                // بس هنفترض النجاح ونعرض الباركود. لو عاوزين Response دقيق لازم تظبط الـ CORS في السكربت.
+                generateBarcode(data.nationalId, data.itemChoice, data.price);
+            })
+            .catch(error => {
+                alert('حدث خطأ في الاتصال بقاعدة البيانات.');
+                submitBtn.innerText = "تأكيد الحجز واستخراج الباركود";
+                submitBtn.disabled = false;
+            });
+        });
+
+        function generateBarcode(id, choice, price) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            // توليد الباركود
+            JsBarcode("#barcode", id, {
+                format: "CODE128",
+                width: 2,
+                height: 80,
+                displayValue: true
+            });
+
+            document.getElementById('displayChoice').innerText = `الاختيار: ${choice}`;
+            document.getElementById('displayPrice').innerText = `القيمة المطلوبة: ${price} جنيه`;
+        }
+
+        function downloadTicket() {
+            const ticket = document.getElementById('ticketCard');
+            html2canvas(ticket, { scale: 3 }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'Ticket_' + document.getElementById('nationalId').value + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
