@@ -35,8 +35,14 @@
         .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateX(-5px); }
         .choice-card input { margin-left: 15px; transform: scale(1.3); cursor: pointer; }
 
-        button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; }
+        /* تعديلات زر الإرسال عشان الأنيميشن */
+        button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         button:hover { background: #152b52; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        button:disabled { background: #5a739e; cursor: not-allowed; }
+
+        /* شكل التحميل الدائري السريع */
+        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 2px dashed #ccc; padding-top: 20px; }
         #ticketCard { background: white; padding: 30px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -44,7 +50,6 @@
         #downloadBtn:hover { background: #218838; }
         .ticket-note { font-size: 20px; color: #1e3c72; font-weight: bold; margin-bottom: 15px; }
 
-        /* ستايل النافذة العائمة الكلاسيكية */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal-box { background: #fff; border: 6px double #1e3c72; padding: 30px 20px; border-radius: 10px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
         .modal-box h3 { color: #d9534f; margin-top: 0; font-size: 28px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
@@ -52,7 +57,6 @@
         .modal-btn { background: #b8860b; color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
         .modal-btn:hover { background: #997009; }
 
-        /* الكود السحري للتحكم في مقاس الـ QR Code على الشاشة بس */
         #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; }
 
         @media (max-width: 600px) {
@@ -138,7 +142,10 @@
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn">تسجيل الحجز</button>
+            <button type="submit" id="submitBtn">
+                <span id="btnText">تسجيل الحجز</span>
+                <div id="btnSpinner" class="spinner"></div>
+            </button>
         </form>
 
         <div id="resultArea">
@@ -170,8 +177,8 @@
             document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById("qrcode"), {
                 text: barcodeValue,
-                width: 600,  // الجودة العالية جداً للصورة عشان تنزل HD
-                height: 600, // الجودة العالية جداً للصورة عشان تنزل HD
+                width: 600,  
+                height: 600, 
                 colorDark : "#1e3c72",
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
@@ -228,6 +235,20 @@
                 return;
             }
 
+            const currentId = idInput.value;
+            
+            // 🚀 الذاكرة اللحظية (Local Cache) للسرعة الصاروخية
+            const localCache = JSON.parse(localStorage.getItem('ticketCache')) || {};
+            
+            if (localCache[currentId]) {
+                // لو مسجل قبل كده على نفس الموبايل، طلعله النافذة في 0 ثانية!
+                const cachedData = localCache[currentId];
+                generateBarcodeUI(cachedData.barcode, cachedData.choice, cachedData.price);
+                document.getElementById('resultArea').style.display = 'none';
+                document.getElementById('duplicateModal').style.display = 'flex';
+                return;
+            }
+
             const selectedChoice = document.querySelector('input[name="itemChoice"]:checked');
             const uniqueBarcode = generateRandomCode(); 
 
@@ -235,16 +256,21 @@
                 itemChoice: selectedChoice.value,
                 price: selectedChoice.getAttribute('data-price'),
                 fullName: nameInput.value,
-                nationalId: idInput.value,
+                nationalId: currentId,
                 status: document.getElementById('status').value,
                 emailUser: emailInput.value,
                 emailDomain: document.getElementById('emailDomain').value,
                 barcode: uniqueBarcode 
             };
 
+            // تشغيل الأنيميشن بتاع الزرار
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "جاري التحقق والتسجيل...";
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
             submitBtn.disabled = true;
+            btnText.innerText = "جاري التأكيد...";
+            btnSpinner.style.display = "block";
 
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
@@ -255,17 +281,27 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'duplicate') {
+                    // حفظ في الذاكرة عشان لو داس تاني ميستناش
+                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
+                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
+                    
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                     document.getElementById('resultArea').style.display = 'none'; 
                     document.getElementById('duplicateModal').style.display = 'flex';
                 } else {
+                    // حفظ في الذاكرة للطلبات الجديدة برضه
+                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
+                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
+                    
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                 }
             })
             .catch(error => {
                 alert('حدث خطأ، يرجى التأكد من اتصالك بالإنترنت والمحاولة مجدداً.');
-                submitBtn.innerText = "تسجيل الحجز";
+                // إرجاع الزرار لحالته الأصلية
                 submitBtn.disabled = false;
+                btnText.innerText = "تسجيل الحجز";
+                btnSpinner.style.display = "none";
             });
         });
 
