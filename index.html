@@ -176,7 +176,7 @@
         const idError = document.getElementById('idError');
         idInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '');
-            if (this.value.length > 0 && this.value.length !== 16) {
+            if (this.value.length > 0 && this.value.length !== 14) {
                 this.classList.add('invalid-input');
                 idError.style.display = 'block';
             } else {
@@ -187,9 +187,11 @@
 
         const emailInput = document.getElementById('emailUser');
         emailInput.addEventListener('input', function() {
+            // لو الطالب كتب @، السيستم هياخد كل الكلام اللي قبلها بس ويرمي الباقي
             if (this.value.includes('@')) {
-                this.value = this.value.replace(/@/g, '');
+                this.value = this.value.split('@')[0];
             }
+            // منع المسافات والحروف العربي
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
         });
 
@@ -203,8 +205,8 @@
                 alert('عذراً، يجب كتابة الاسم ثلاثي باللغة العربية بشكل صحيح.');
                 return;
             }
-            if (!/^\d{16}$/.test(idInput.value)) {
-                alert('عذراً، يجب إدخال 16 رقم بشكل صحيح.');
+            if (!/^\d{14}$/.test(idInput.value)) {
+                alert('عذراً، يجب إدخال 14 رقم بشكل صحيح.');
                 return;
             }
 
