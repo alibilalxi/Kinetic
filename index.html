@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kinetic CD Reverse</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         body { margin: 0; font-family: 'Tajawal', sans-serif; background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: #333; overflow-x: hidden; }
@@ -141,7 +141,7 @@
         <div id="resultArea">
             <div class="ticket-note">يرجى إبراز التذكرة عند تأكيد الحجز مع المنسق</div>
             <div id="ticketCard">
-                <svg id="barcode"></svg>
+                <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
                 <h4 id="displayChoice" style="margin: 15px 0; font-size: 26px; font-weight: bold; color: #111;"></h4>
                 <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
@@ -151,13 +151,23 @@
     </div>
 
     <script>
-        function generateRandomCode() {
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const numbers = '0123456789';
-            let code = '';
-            for (let i = 0; i < 5; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
-            for (let i = 0; i < 14; i++) code += numbers.charAt(Math.floor(Math.random() * numbers.length));
-            return code;
+        function generateBarcodeUI(barcodeValue, choice, price) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            // رسم الـ QR Code
+            document.getElementById('qrcode').innerHTML = ""; 
+            new QRCode(document.getElementById("qrcode"), {
+                text: barcodeValue,
+                width: 150,
+                height: 150,
+                colorDark : "#1e3c72",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('displayChoice').innerText = `${choice}`;
+            document.getElementById('displayPrice').innerText = `L.E: ${price}`;
         }
 
         const nameInput = document.getElementById('fullName');
