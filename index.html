@@ -44,12 +44,12 @@
         #downloadBtn:hover { background: #218838; }
         .ticket-note { font-size: 20px; color: #1e3c72; font-weight: bold; margin-bottom: 15px; }
 
-        /* ستايل النافذة العائمة الكلاسيكية (تمت إضافتها) */
+        /* ستايل النافذة العائمة الكلاسيكية */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
         .modal-box { background: #fff; border: 6px double #1e3c72; padding: 30px 20px; border-radius: 10px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
         .modal-box h3 { color: #d9534f; margin-top: 0; font-size: 28px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
         .modal-box p { font-size: 18px; font-weight: bold; margin-bottom: 25px; color: #333; line-height: 1.5; }
-        .modal-btn { background: #b8860b; /* لون ذهبي كلاسيكي */ color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
+        .modal-btn { background: #b8860b; color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
         .modal-btn:hover { background: #997009; }
 
         @media (max-width: 600px) {
@@ -151,11 +151,21 @@
     </div>
 
     <script>
+        // إرجاع الدالة المسئولة عن توليد الكود العشوائي اللي كانت ممسوحة
+        function generateRandomCode() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            for (let i = 0; i < 14; i++) code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            return code;
+        }
+
+        // مسحنا الدالة القديمة بتاعة JsBarcode وسيبنا دي بس
         function generateBarcodeUI(barcodeValue, choice, price) {
             document.getElementById('bookingForm').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
             
-            // رسم الـ QR Code
             document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById("qrcode"), {
                 text: barcodeValue,
@@ -197,15 +207,12 @@
 
         const emailInput = document.getElementById('emailUser');
         emailInput.addEventListener('input', function() {
-            // لو الطالب كتب @، السيستم هياخد كل الكلام اللي قبلها بس ويرمي الباقي
             if (this.value.includes('@')) {
                 this.value = this.value.split('@')[0];
             }
-            // منع المسافات والحروف العربي
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
         });
 
-        // حط اللينك الجديد بتاع الشيت هنا
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -238,22 +245,19 @@
             submitBtn.innerText = "جاري التحقق والتسجيل...";
             submitBtn.disabled = true;
 
-            // التعديل السحري هنا: شيلنا الـ no-cors عشان نقدر نقرأ رد الشيت
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // استخدام text/plain بيمنع مشاكل الـ CORS المزعجة
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                 body: JSON.stringify(data),
                 redirect: 'follow'
             })
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'duplicate') {
-                    // لو متسجل، نرسم الباركود القديم مخفي ونطلع النافذة
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
-                    document.getElementById('resultArea').style.display = 'none'; // نخفي النتيجة ونطلع النافذة
+                    document.getElementById('resultArea').style.display = 'none'; 
                     document.getElementById('duplicateModal').style.display = 'flex';
                 } else {
-                    // لو أول مرة، نرسم الباركود الجديد ونعرضه
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                 }
             })
@@ -264,25 +268,9 @@
             });
         });
 
-        function generateBarcodeUI(barcodeValue, choice, price) {
-            document.getElementById('bookingForm').style.display = 'none';
-            document.getElementById('resultArea').style.display = 'block';
-            
-            JsBarcode("#barcode", barcodeValue, {
-                format: "CODE128",
-                width: 2.5,
-                height: 100,
-                displayValue: false
-            });
-
-            document.getElementById('displayChoice').innerText = `${choice}`;
-            document.getElementById('displayPrice').innerText = `L.E: ${price}`;
-        }
-
-        // دالة تقفيل النافذة العائمة وتحميل الصورة فوراً
         function closeModalAndDownload() {
             document.getElementById('duplicateModal').style.display = 'none';
-            document.getElementById('resultArea').style.display = 'block'; // نظهر المنطقة عشان يحمل منها
+            document.getElementById('resultArea').style.display = 'block'; 
             downloadTicket();
         }
 
