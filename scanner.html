@@ -32,7 +32,9 @@
 
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNLkRLIyDKf3LDZtL_3Nb5fUvJSPlX3R0JV_fbJRGeDswDXJO7gjHrqDau675cj1nBVQ/exec';
+        // ✅ اللينك الجديد بتاعك
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw1RHQpHzyUe8jFeVCQxHzmrqHuWo86dqg3SHT4IrhRBtRlaXVxLK2-Ztp2GGhHxvUr7Q/exec';
+        
         let localData = JSON.parse(localStorage.getItem('offlineData')) || []; 
         let offlineQueue = JSON.parse(localStorage.getItem('offlineQueue')) || []; 
         let html5QrCode;
@@ -76,12 +78,25 @@
                         processResult(student, decodedText);
                     });
                 }
-            );
+            ).catch(err => {
+                alert("تعذر فتح الكاميرا! تأكد من إعطاء الصلاحية وتجنب التصفح المتخفي الأوفلاين.");
+                document.getElementById('startBtn').style.display = "block";
+                document.getElementById('reader').style.display = "none";
+            });
         }
 
         function processResult(student, barcode) {
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
+
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var scanTime = hours + ':' + minutes + ' ' + ampm;
 
             if (!student) {
                 resultDiv.className = 'result-box error';
@@ -107,12 +122,14 @@
                 
                 student.status = "Paid";
                 localStorage.setItem('offlineData', JSON.stringify(localData));
-                addToOfflineQueue(barcode);
+                
+                // 💡 إضافة العملية للطابور مع وقت التصوير الفعلي
+                addToOfflineQueue({ code: barcode, time: scanTime });
             }
         }
 
-        function addToOfflineQueue(barcode) {
-            offlineQueue.push(barcode);
+        function addToOfflineQueue(scanData) {
+            offlineQueue.push(scanData);
             localStorage.setItem('offlineQueue', JSON.stringify(offlineQueue));
             syncOfflineQueue();
         }
@@ -120,8 +137,9 @@
         function syncOfflineQueue() {
             if (offlineQueue.length === 0 || !navigator.onLine) return;
 
-            const barcode = offlineQueue[0];
-            fetch(`${SCRIPT_URL}?action=scan&barcode=${barcode}`)
+            const scanData = offlineQueue[0];
+            // 💡 إرسال الوقت الجاهز من الموبايل للشيت
+            fetch(`${SCRIPT_URL}?action=scan&barcode=${scanData.code}&time=${encodeURIComponent(scanData.time)}`)
             .then(res => res.json())
             .then(() => {
                 offlineQueue.shift();
