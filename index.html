@@ -3,41 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الحجز الكيميائية</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+    <title>Kinetic CD Reverse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        /* خلفية كيميائية متحركة (فقاعات) */
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: #333; overflow-x: hidden; }
-        .bubbles { position: absolute; width: 100%; height: 100%; z-index: -1; overflow: hidden; top:0; left:0; }
-        .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; animation: rise 10s infinite ease-in; }
-        @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1000px) scale(1.5); } }
+        body { margin: 0; font-family: 'Tajawal', sans-serif; background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); color: #333; overflow-x: hidden; }
+        h2, h3, h4 { font-family: 'Amiri', serif; }
         
-        /* تنسيق الفورم */
-        .container { max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        h2 { text-align: center; color: #1e3c72; }
+        .bubbles { position: fixed; width: 100%; height: 100%; z-index: -1; top:0; left:0; pointer-events: none; }
+        .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; animation: rise 10s infinite ease-in; }
+        @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1500px) scale(1.5); } }
+        
+        .container { max-width: 650px; margin: 40px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        h2 { text-align: center; color: #1e3c72; font-size: 32px; margin-bottom: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; }
-        input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #111; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px; }
+        input:focus, select:focus { border-color: #1e3c72; outline: none; box-shadow: 0 0 8px rgba(30, 60, 114, 0.3); }
+        
         .email-group { display: flex; gap: 10px; direction: ltr; }
         .email-group input { flex: 2; text-align: right; }
-        .email-group span { margin-top: 10px; font-weight: bold; }
+        .email-group span { margin-top: 10px; font-weight: bold; font-size: 18px; color: #555; }
         .email-group select { flex: 1; }
         
-        /* الاختيارات الـ 7 */
-        .choices-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .choice-card { border: 1px solid #ccc; padding: 10px; border-radius: 5px; cursor: pointer; text-align: center; background: #f9f9f9; }
-        .choice-card:hover { background: #e0eaf5; }
-        .choice-card input { margin-left: 10px; }
+        .invalid-input { border: 2px solid #dc3545 !important; background-color: #fff8f8; }
+        .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        button { width: 100%; padding: 15px; background: #28a745; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #218838; }
+        /* ستايل جديد للاختيارات بـ الصور المصغرة (Thumbnails) */
+        .choices-list { display: flex; flex-direction: column; gap: 15px; }
+        .choice-card { border: 2px solid #ddd; padding: 10px; border-radius: 10px; cursor: pointer; background: rgba(249, 249, 249, 0.9); transition: all 0.3s ease; display: flex; align-items: center; color: #222; }
+        .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .choice-card input { margin-left: 15px; transform: scale(1.4); cursor: pointer; }
+        
+        /* تنسيق الصورة المصغرة والنص */
+        .choice-thumb { width: 50px; height: 50px; border-radius: 8px; margin-left: 15px; object-fit: cover; border: 1px solid #ccc; }
+        .choice-text-container { flex: 1; display: flex; flex-direction: column; }
+        .choice-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .choice-price { color: #d9534f; font-weight: bold; font-size: 14px; direction: ltr; text-align: right; }
 
-        /* منطقة الباركود */
+        button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        button:hover { background: #152b52; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        button:disabled { background: #5a739e; cursor: not-allowed; }
+
+        .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 2px dashed #ccc; padding-top: 20px; }
-        #ticketCard { background: white; padding: 20px; border: 2px solid #1e3c72; border-radius: 10px; display: inline-block; margin-bottom: 20px; }
-        #downloadBtn { background: #17a2b8; }
-        #downloadBtn:hover { background: #138496; }
+        #ticketCard { background: white; padding: 30px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        #downloadBtn { background: #28a745; font-size: 18px; }
+        #downloadBtn:hover { background: #218838; }
+        .ticket-note { font-size: 20px; color: #1e3c72; font-weight: bold; margin-bottom: 15px; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: #fff; border: 6px double #1e3c72; padding: 30px 20px; border-radius: 10px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+        .modal-box h3 { color: #d9534f; margin-top: 0; font-size: 28px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
+        .modal-box p { font-size: 18px; font-weight: bold; margin-bottom: 25px; color: #333; line-height: 1.5; }
+        .modal-btn { background: #b8860b; color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
+        .modal-btn:hover { background: #997009; }
+
+        #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; }
+
+        @media (max-width: 600px) {
+            .container { margin: 20px 15px; padding: 20px; }
+            h2 { font-size: 26px; }
+            .choices-list { gap: 10px; }
+            .choice-card { padding: 8px; }
+            .choice-thumb { width: 40px; height: 40px; margin-left: 10px; }
+            .choice-title { font-size: 14px; }
+            .email-group { flex-direction: column; direction: rtl; }
+            .email-group input { text-align: right; }
+            .email-group span { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -47,38 +84,105 @@
         <div class="bubble" style="width:60px; height:60px; left:30%; animation-duration:12s; animation-delay:2s;"></div>
         <div class="bubble" style="width:30px; height:30px; left:60%; animation-duration:6s; animation-delay:4s;"></div>
         <div class="bubble" style="width:80px; height:80px; left:80%; animation-duration:14s;"></div>
+        <div class="bubble" style="width:50px; height:50px; left:50%; animation-duration:10s; animation-delay:1s;"></div>
+    </div>
+
+    <div class="modal-overlay" id="duplicateModal">
+        <div class="modal-box">
+            <h3>عذراً!</h3>
+            <p>تم التسجيل من قبل بهذه البيانات.<br>قم بتحميل إيصالك من هنا.</p>
+            <button class="modal-btn" onclick="closeModalAndDownload()">تحميل الإيصال</button>
+        </div>
     </div>
 
     <div class="container">
-        <h2>منصة الحجز</h2>
-        <img src="https://via.placeholder.com/600x200?text=صورة+المنتج+أو+الحدث" alt="صورة توضيحية" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">
+        <h2>منصة الحجز والتسجيل</h2>
+        <img src="https://via.placeholder.com/650x200/1e3c72/ffffff?text=Kinetic+CD+Reverse" alt="Banner" style="width: 100%; border-radius: 10px; margin-bottom: 25px;">
         
         <form id="bookingForm">
             <div class="form-group">
-                <label>اختر من القائمة (اختر واحد فقط):</label>
-                <div class="choices-grid">
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 1" data-price="200" required> اختيار 1</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 2" data-price="200"> اختيار 2</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 3" data-price="200"> اختيار 3</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 4" data-price="400"> اختيار 4</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 5" data-price="400"> اختيار 5</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 6" data-price="400"> اختيار 6</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="اختيار 7" data-price="600"> اختيار 7</label>
+                <label>اختر باقة الحجز المطلوبة:</label>
+                <div class="choices-list">
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required>
+                        <img src="https://via.placeholder.com/50/28a745/ffffff?text=Course" alt="Course" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + [397 Questions for Training with Answers]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200">
+                        <img src="https://via.placeholder.com/50/dc3545/ffffff?text=Problems" alt="Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems [1404 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Final Examination [575 Questions]" data-price="200">
+                        <img src="https://via.placeholder.com/50/007bff/ffffff?text=Exam" alt="Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Final Examination (Science & Education) [575 Questions With Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Problem [ 1801 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/17a2b8/ffffff?text=C+P" alt="Course + Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Problem [ 1801 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Examination [971 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/ffc107/333333?text=C+E" alt="Course + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Examination [971 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems + Examination [1980 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/6c757d/ffffff?text=P+E" alt="Problems + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems + Examination [1980 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600">
+                        <img src="https://via.placeholder.com/50/1e3c72/ffffff?text=ALL" alt="Full Package" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Problems + Examination [ 2375 Question + Problems With Answer]</span>
+                            <span class="choice-price">EGP 600</span>
+                        </div>
+                    </label>
+                    
                 </div>
             </div>
 
             <div class="form-group">
                 <label>الاسم ثلاثي (باللغة العربية):</label>
-                <input type="text" id="fullName" placeholder="مثال: أحمد محمد علي" pattern="^[\u0621-\u064A\s]+$" required>
+                <input type="text" id="fullName" placeholder="مثال: أحمد محمد علي" required>
+                <div id="nameError" class="error-message">❌ يرجى كتابة الاسم باللغة العربية فقط!</div>
             </div>
 
             <div class="form-group">
-                <label>رقم التأكيد (الرقم القومي):</label>
-                <input type="text" id="nationalId" placeholder="11 رقم فقط يبدأ بـ 2 أو 3" pattern="^[23][0-9]{10}$" maxlength="11" required>
+                <label>الرقم القومى:</label>
+                <input type="text" id="nationalId" placeholder="NO.14" maxlength="14" required>
+                <div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه 14 رقم فقط.</div>
             </div>
 
             <div class="form-group">
-                <label>الحالة الدراسية:</label>
+                <label>الـفرقة:</label>
                 <select id="status" required>
                     <option value="">-- اختر حالتك --</option>
                     <option value="رابعة (مستجد)">رابعة (مستجد)</option>
@@ -98,95 +202,186 @@
                         <option value="hotmail.com">hotmail.com</option>
                     </select>
                     <span>@</span>
-                    <input type="text" id="emailUser" placeholder="اسم المستخدم" pattern="^[a-zA-Z0-9._-]+$" required>
+                    <input type="text" id="emailUser" placeholder="اسم المستخدم (بدون @)" required>
                 </div>
             </div>
 
-            <button type="submit" id="submitBtn">تأكيد الحجز واستخراج الباركود</button>
+            <button type="submit" id="submitBtn">
+                <span id="btnText">تسجيل الحجز</span>
+                <div id="btnSpinner" class="spinner"></div>
+            </button>
         </form>
 
         <div id="resultArea">
+            <div class="ticket-note">يرجى إبراز التذكرة عند تأكيد الحجز مع المنسق</div>
             <div id="ticketCard">
-                <h3 style="margin-top:0;">تذكرة الحجز</h3>
-                <svg id="barcode"></svg>
-                <h4 id="displayChoice" style="margin: 10px 0;"></h4>
-                <h4 id="displayPrice" style="color: #d9534f;"></h4>
+                <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
+                <h4 id="displayChoice" style="margin: 15px 0; font-size: 20px; font-weight: bold; color: #111; max-width: 300px; line-height: 1.4;"></h4>
+                <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
             <br>
-            <button id="downloadBtn" onclick="downloadTicket()">تحميل الصورة بجودة عالية</button>
+            <button id="downloadBtn" onclick="downloadTicket()">Download</button>
         </div>
     </div>
 
     <script>
-        // حط هنا اللينك اللي طلعلك من Google Apps Script مكان كلمة YOUR_WEB_APP_URL_HERE
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHr0DULPXVTRW0_cw0GRiqjPJZxD_UPlgT4UQsjQDOU3FwXg7mznT2MSjwP0mo5y-K6g/exec';
+        function generateRandomCode() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numbers = '0123456789';
+            let code = '';
+            for (let i = 0; i < 5; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            for (let i = 0; i < 14; i++) code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            return code;
+        }
+
+        function generateBarcodeUI(barcodeValue, choice, price) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+            
+            document.getElementById('qrcode').innerHTML = ""; 
+            new QRCode(document.getElementById("qrcode"), {
+                text: barcodeValue,
+                width: 600,  
+                height: 600, 
+                colorDark : "#1e3c72",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // تعديل لعرض النص الطويل بشكل منسق في التذكرة
+            document.getElementById('displayChoice').innerText = `${choice}`;
+            document.getElementById('displayPrice').innerText = `L.E: ${price}`;
+        }
+
+        const nameInput = document.getElementById('fullName');
+        const nameError = document.getElementById('nameError');
+        nameInput.addEventListener('input', function() {
+            if (this.value !== "" && !/^[\u0600-\u06FF\s]+$/.test(this.value)) {
+                this.classList.add('invalid-input');
+                nameError.style.display = 'block';
+            } else {
+                this.classList.remove('invalid-input');
+                nameError.style.display = 'none';
+            }
+        });
+
+        const idInput = document.getElementById('nationalId');
+        const idError = document.getElementById('idError');
+        idInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 0 && this.value.length !== 14) {
+                this.classList.add('invalid-input');
+                idError.style.display = 'block';
+            } else {
+                this.classList.remove('invalid-input');
+                idError.style.display = 'none';
+            }
+        });
+
+        const emailInput = document.getElementById('emailUser');
+        emailInput.addEventListener('input', function() {
+            if (this.value.includes('@')) {
+                this.value = this.value.split('@')[0];
+            }
+            this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
+        });
+
+        // حط اللينك الجديد بتاع الشيت هنا
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // التحقق من أن الاسم 3 مقاطع على الأقل
-            const nameWords = document.getElementById('fullName').value.trim().split(' ');
-            if (nameWords.length < 3) {
-                alert('عذراً، يجب كتابة الاسم ثلاثي على الأقل.');
+            if (!/^[\u0600-\u06FF\s]+$/.test(nameInput.value) || nameInput.value.trim().split(' ').length < 3) {
+                alert('عذراً، يجب كتابة الاسم ثلاثي باللغة العربية بشكل صحيح.');
+                return;
+            }
+            if (!/^\d{14}$/.test(idInput.value)) {
+                alert('عذراً، يجب إدخال 14 رقم بشكل صحيح.');
                 return;
             }
 
-            // تجميع البيانات
+            const currentId = idInput.value;
+            
+            // 🚀 الذاكرة اللحظية (Local Cache) للسرعة الصاروخية
+            const localCache = JSON.parse(localStorage.getItem('ticketCache')) || {};
+            
+            if (localCache[currentId]) {
+                const cachedData = localCache[currentId];
+                generateBarcodeUI(cachedData.barcode, cachedData.choice, cachedData.price);
+                document.getElementById('resultArea').style.display = 'none';
+                document.getElementById('duplicateModal').style.display = 'flex';
+                return;
+            }
+
             const selectedChoice = document.querySelector('input[name="itemChoice"]:checked');
+            const uniqueBarcode = generateRandomCode(); 
+
             const data = {
                 itemChoice: selectedChoice.value,
                 price: selectedChoice.getAttribute('data-price'),
-                fullName: document.getElementById('fullName').value,
-                nationalId: document.getElementById('nationalId').value,
+                fullName: nameInput.value,
+                nationalId: currentId,
                 status: document.getElementById('status').value,
-                emailUser: document.getElementById('emailUser').value,
-                emailDomain: document.getElementById('emailDomain').value
+                emailUser: emailInput.value,
+                emailDomain: document.getElementById('emailDomain').value,
+                barcode: uniqueBarcode 
             };
 
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerText = "جاري التحقق والتسجيل...";
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            
             submitBtn.disabled = true;
+            btnText.innerText = "جاري التأكيد...";
+            btnSpinner.style.display = "block";
 
-            // إرسال البيانات لـ Google Sheets
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // لايقاف مشاكل الكروس دومين مؤقتا في التنفيذ السريع
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(data),
+                redirect: 'follow'
             })
-            .then(() => {
-                // ملاحظة: بسبب no-cors السكربت مش هيرجع Response نقرأه بسهولة هنا
-                // بس هنفترض النجاح ونعرض الباركود. لو عاوزين Response دقيق لازم تظبط الـ CORS في السكربت.
-                generateBarcode(data.nationalId, data.itemChoice, data.price);
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'duplicate') {
+                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
+                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
+                    
+                    generateBarcodeUI(result.barcode, result.choiceName, result.price);
+                    document.getElementById('resultArea').style.display = 'none'; 
+                    document.getElementById('duplicateModal').style.display = 'flex';
+                } else {
+                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
+                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
+                    
+                    generateBarcodeUI(result.barcode, result.choiceName, result.price);
+                }
             })
             .catch(error => {
-                alert('حدث خطأ في الاتصال بقاعدة البيانات.');
-                submitBtn.innerText = "تأكيد الحجز واستخراج الباركود";
+                alert('حدث خطأ، يرجى التأكد من اتصالك بالإنترنت والمحاولة مجدداً.');
                 submitBtn.disabled = false;
+                btnText.innerText = "تسجيل الحجز";
+                btnSpinner.style.display = "none";
             });
         });
 
-        function generateBarcode(id, choice, price) {
-            document.getElementById('bookingForm').style.display = 'none';
-            document.getElementById('resultArea').style.display = 'block';
-            
-            // توليد الباركود
-            JsBarcode("#barcode", id, {
-                format: "CODE128",
-                width: 2,
-                height: 80,
-                displayValue: true
-            });
-
-            document.getElementById('displayChoice').innerText = `الاختيار: ${choice}`;
-            document.getElementById('displayPrice').innerText = `القيمة المطلوبة: ${price} جنيه`;
+        function closeModalAndDownload() {
+            document.getElementById('duplicateModal').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block'; 
+            downloadTicket();
         }
 
         function downloadTicket() {
             const ticket = document.getElementById('ticketCard');
-            html2canvas(ticket, { scale: 3 }).then(canvas => {
+            // تسمية الصورة برقم القومي عشان المنسق ميتلخبطش
+            const natId = document.getElementById('nationalId').value;
+            html2canvas(ticket, { 
+                scale: 3,
+                backgroundColor: null
+            }).then(canvas => {
                 let link = document.createElement('a');
-                link.download = 'Ticket_' + document.getElementById('nationalId').value + '.png';
+                link.download = 'Ticket_' + natId + '.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
