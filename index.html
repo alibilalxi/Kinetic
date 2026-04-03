@@ -286,7 +286,7 @@
         });
 
         // ✅ اللينك الجديد بتاعك محطوط هنا
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqKNrWJyMSbtyP9NIpH40bFtqZem8AaGWmSblunkhgXMf4U-ZAswRGbY-WJQlWH5lCA/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNLkRLIyDKf3LDZtL_3Nb5fUvJSPlX3R0JV_fbJRGeDswDXJO7gjHrqDau675cj1nBVQ/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -323,7 +323,6 @@
             btnText.innerText = "جاري التأكيد...";
             btnSpinner.style.display = "block";
 
-            // إرسال البيانات مباشرة للسيرفر (الشيت) بدون فحص الذاكرة
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
