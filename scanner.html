@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>كاميرا المنسق | فحص التذاكر</title>
+    <title>Qr code Paid Recorder</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background: #0f2027; color: white; margin: 0; padding: 15px; text-align: center; }
@@ -43,7 +43,7 @@
 
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
-        // ✅ حطيتلك اللينك بتاعك جاهز بالمللي
+        // ✅ اللينك الجديد بتاعك محطوط هنا بالظبط
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWEegXteSQXYBHCf1QOSOVW6GI-y__3ciUAbLNcQcyrGGVsWrL9u73UB75Vc37XXg/exec';
         let html5QrCode;
 
@@ -64,7 +64,6 @@
                         document.getElementById('reader').style.display = 'none';
                         document.getElementById('loading').style.display = 'block';
                         
-                        // ضفت هنا redirect: follow عشان الاتصال ميفصلش
                         fetch(`${GOOGLE_SCRIPT_URL}?action=scan&barcode=${decodedText}`, {
                             method: 'GET',
                             redirect: 'follow'
@@ -119,7 +118,7 @@
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
             resultDiv.className = 'result-box error';
-            resultDiv.innerHTML = "<h3 style='margin:0;'>حدث خطأ في الاتصال بالإنترنت!</h3><p style='margin-top:15px; font-size:14px;'>(اضغط هنا للمحاولة مرة أخرى)</p>";
+            resultDiv.innerHTML = "<h3 style='margin:0;'>حدث خطأ في الاتصال بالإنترنت!</h3><p style='margin-top:15px; font-size:14px;'>(تأكد من صلاحيات رابط الشيت واضغط هنا للمحاولة)</p>";
         }
     </script>
 </body>
