@@ -89,7 +89,7 @@
     <div class="modal-overlay" id="duplicateModal">
         <div class="modal-box">
             <h3>عذراً!</h3>
-            <p>تم التسجيل من قبل بهذه البيانات.<br>قم بتحميل إيصالك من هنا.</p>
+            <p>هذه البيانات مسجلة بالفعل في النظام.<br>قم بتحميل إيصالك من هنا.</p>
             <button class="modal-btn" onclick="closeModalAndDownload()">تحميل الإيصال</button>
         </div>
     </div>
@@ -285,8 +285,8 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        // ✅ اللينك الجديد بتاعك محطوط هنا بالظبط
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWEegXteSQXYBHCf1QOSOVW6GI-y__3ciUAbLNcQcyrGGVsWrL9u73UB75Vc37XXg/exec';
+        // ✅ اللينك الجديد بتاعك محطوط هنا
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZqKNrWJyMSbtyP9NIpH40bFtqZem8AaGWmSblunkhgXMf4U-ZAswRGbY-WJQlWH5lCA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -323,7 +323,7 @@
             btnText.innerText = "جاري التأكيد...";
             btnSpinner.style.display = "block";
 
-            // السيستم هيسأل الشيت مباشرة (بدون الذاكرة) عشان مشكلة الحذف تتلغي
+            // إرسال البيانات مباشرة للسيرفر (الشيت) بدون فحص الذاكرة
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
