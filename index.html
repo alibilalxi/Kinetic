@@ -15,7 +15,7 @@
         .bubble { position: absolute; bottom: -100px; background: rgba(255, 255, 255, 0.15); border-radius: 50%; animation: rise 10s infinite ease-in; }
         @keyframes rise { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-1500px) scale(1.5); } }
         
-        .container { max-width: 600px; margin: 40px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .container { max-width: 650px; margin: 40px auto; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
         h2 { text-align: center; color: #1e3c72; font-size: 32px; margin-bottom: 25px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #111; }
@@ -30,17 +30,22 @@
         .invalid-input { border: 2px solid #dc3545 !important; background-color: #fff8f8; }
         .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        .choices-list { display: flex; flex-direction: column; gap: 12px; }
-        .choice-card { border: 2px solid #ddd; padding: 15px; border-radius: 8px; cursor: pointer; background: rgba(249, 249, 249, 0.9); font-weight: 500; font-size: 16px; transition: all 0.3s ease; display: flex; align-items: center; color: #222; }
-        .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateX(-5px); }
-        .choice-card input { margin-left: 15px; transform: scale(1.3); cursor: pointer; }
+        /* ستايل جديد للاختيارات بـ الصور المصغرة (Thumbnails) */
+        .choices-list { display: flex; flex-direction: column; gap: 15px; }
+        .choice-card { border: 2px solid #ddd; padding: 10px; border-radius: 10px; cursor: pointer; background: rgba(249, 249, 249, 0.9); transition: all 0.3s ease; display: flex; align-items: center; color: #222; }
+        .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .choice-card input { margin-left: 15px; transform: scale(1.4); cursor: pointer; }
+        
+        /* تنسيق الصورة المصغرة والنص */
+        .choice-thumb { width: 50px; height: 50px; border-radius: 8px; margin-left: 15px; object-fit: cover; border: 1px solid #ccc; }
+        .choice-text-container { flex: 1; display: flex; flex-direction: column; }
+        .choice-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .choice-price { color: #d9534f; font-weight: bold; font-size: 14px; direction: ltr; text-align: right; }
 
-        /* تعديلات زر الإرسال عشان الأنيميشن */
         button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         button:hover { background: #152b52; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         button:disabled { background: #5a739e; cursor: not-allowed; }
 
-        /* شكل التحميل الدائري السريع */
         .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -62,7 +67,10 @@
         @media (max-width: 600px) {
             .container { margin: 20px 15px; padding: 20px; }
             h2 { font-size: 26px; }
-            .choice-card { font-size: 15px; padding: 12px; }
+            .choices-list { gap: 10px; }
+            .choice-card { padding: 8px; }
+            .choice-thumb { width: 40px; height: 40px; margin-left: 10px; }
+            .choice-title { font-size: 14px; }
             .email-group { flex-direction: column; direction: rtl; }
             .email-group input { text-align: right; }
             .email-group span { display: none; }
@@ -89,19 +97,75 @@
 
     <div class="container">
         <h2>منصة الحجز والتسجيل</h2>
-        <img src="https://via.placeholder.com/600x200?text=صورة+المنتج+أو+الحدث" alt="click" style="width: 100%; border-radius: 10px; margin-bottom: 25px;">
+        <img src="https://via.placeholder.com/650x200/1e3c72/ffffff?text=Kinetic+CD+Reverse" alt="Banner" style="width: 100%; border-radius: 10px; margin-bottom: 25px;">
         
         <form id="bookingForm">
             <div class="form-group">
-                <label>Choose:</label>
+                <label>اختر باقة الحجز المطلوبة:</label>
                 <div class="choices-list">
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="A" data-price="200" required> A</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="B" data-price="200"> B</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="C" data-price="200"> C</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="AB" data-price="400"> AB</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="AC" data-price="400"> AC</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="BC" data-price="400"> BC</label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="ABC" data-price="600"> ABC</label>
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="A: Course + [397 Questions]" data-price="200" required>
+                        <img src="https://via.placeholder.com/50/28a745/ffffff?text=Course" alt="Course" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">A: Course + [397 Questions for Training with Answers]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="B: Problems [1404 Questions]" data-price="200">
+                        <img src="https://via.placeholder.com/50/dc3545/ffffff?text=Problems" alt="Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">B: Problems [1404 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="C: Final Examination [575 Questions]" data-price="200">
+                        <img src="https://via.placeholder.com/50/007bff/ffffff?text=Exam" alt="Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">C: Final Examination (Science & Education) [575 Questions With Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="AB: Course + Problem [ 1801 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/17a2b8/ffffff?text=C+P" alt="Course + Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">AB: Course + Problem [ 1801 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="AC: Course + Examination [971 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/ffc107/333333?text=C+E" alt="Course + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">AC: Course + Examination [971 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="BC: Problems + Examination [1980 Questions]" data-price="400">
+                        <img src="https://via.placeholder.com/50/6c757d/ffffff?text=P+E" alt="Problems + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">BC: Problems + Examination [1980 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+                    
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="ABC: Full Package [ 2375 Question]" data-price="600">
+                        <img src="https://via.placeholder.com/50/1e3c72/ffffff?text=ALL" alt="Full Package" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">ABC: Course + Problems + Examination [ 2375 Question + Problems With Answer]</span>
+                            <span class="choice-price">EGP 600</span>
+                        </div>
+                    </label>
+                    
                 </div>
             </div>
 
@@ -152,7 +216,7 @@
             <div class="ticket-note">يرجى إبراز التذكرة عند تأكيد الحجز مع المنسق</div>
             <div id="ticketCard">
                 <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
-                <h4 id="displayChoice" style="margin: 15px 0; font-size: 26px; font-weight: bold; color: #111;"></h4>
+                <h4 id="displayChoice" style="margin: 15px 0; font-size: 20px; font-weight: bold; color: #111; max-width: 300px; line-height: 1.4;"></h4>
                 <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
             <br>
@@ -184,6 +248,7 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
+            // تعديل لعرض النص الطويل بشكل منسق في التذكرة
             document.getElementById('displayChoice').innerText = `${choice}`;
             document.getElementById('displayPrice').innerText = `L.E: ${price}`;
         }
@@ -221,6 +286,7 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
         });
 
+        // حط اللينك الجديد بتاع الشيت هنا
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -241,7 +307,6 @@
             const localCache = JSON.parse(localStorage.getItem('ticketCache')) || {};
             
             if (localCache[currentId]) {
-                // لو مسجل قبل كده على نفس الموبايل، طلعله النافذة في 0 ثانية!
                 const cachedData = localCache[currentId];
                 generateBarcodeUI(cachedData.barcode, cachedData.choice, cachedData.price);
                 document.getElementById('resultArea').style.display = 'none';
@@ -263,7 +328,6 @@
                 barcode: uniqueBarcode 
             };
 
-            // تشغيل الأنيميشن بتاع الزرار
             const submitBtn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const btnSpinner = document.getElementById('btnSpinner');
@@ -281,7 +345,6 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'duplicate') {
-                    // حفظ في الذاكرة عشان لو داس تاني ميستناش
                     localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
                     localStorage.setItem('ticketCache', JSON.stringify(localCache));
                     
@@ -289,7 +352,6 @@
                     document.getElementById('resultArea').style.display = 'none'; 
                     document.getElementById('duplicateModal').style.display = 'flex';
                 } else {
-                    // حفظ في الذاكرة للطلبات الجديدة برضه
                     localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
                     localStorage.setItem('ticketCache', JSON.stringify(localCache));
                     
@@ -298,7 +360,6 @@
             })
             .catch(error => {
                 alert('حدث خطأ، يرجى التأكد من اتصالك بالإنترنت والمحاولة مجدداً.');
-                // إرجاع الزرار لحالته الأصلية
                 submitBtn.disabled = false;
                 btnText.innerText = "تسجيل الحجز";
                 btnSpinner.style.display = "none";
@@ -313,12 +374,14 @@
 
         function downloadTicket() {
             const ticket = document.getElementById('ticketCard');
+            // تسمية الصورة برقم القومي عشان المنسق ميتلخبطش
+            const natId = document.getElementById('nationalId').value;
             html2canvas(ticket, { 
                 scale: 3,
                 backgroundColor: null
             }).then(canvas => {
                 let link = document.createElement('a');
-                link.download = 'Ticket_' + document.getElementById('nationalId').value + '.png';
+                link.download = 'Ticket_' + natId + '.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
