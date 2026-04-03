@@ -285,8 +285,7 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        // ⚠️ حط لينك جوجل سكريبت بتاعك هنا ⚠️
-        const GOOGLE_SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -301,16 +300,6 @@
             }
 
             const currentId = idInput.value;
-            const localCache = JSON.parse(localStorage.getItem('ticketCache')) || {};
-            
-            if (localCache[currentId]) {
-                const cachedData = localCache[currentId];
-                generateBarcodeUI(cachedData.barcode, cachedData.choice, cachedData.price);
-                document.getElementById('resultArea').style.display = 'none';
-                document.getElementById('duplicateModal').style.display = 'flex';
-                return;
-            }
-
             const selectedChoice = document.querySelector('input[name="itemChoice"]:checked');
             const uniqueBarcode = generateRandomCode(); 
 
@@ -333,6 +322,7 @@
             btnText.innerText = "جاري التأكيد...";
             btnSpinner.style.display = "block";
 
+            // إرسال البيانات مباشرة للسيرفر (الشيت) بدون فحص الذاكرة
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
@@ -342,14 +332,10 @@
             .then(response => response.json())
             .then(result => {
                 if(result.status === 'duplicate') {
-                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
-                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                     document.getElementById('resultArea').style.display = 'none'; 
                     document.getElementById('duplicateModal').style.display = 'flex';
                 } else {
-                    localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
-                    localStorage.setItem('ticketCache', JSON.stringify(localCache));
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                 }
             })
