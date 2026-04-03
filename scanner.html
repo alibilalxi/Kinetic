@@ -24,7 +24,7 @@
         <h2> Scan</h2>
         <div id="syncMsg" class="sync-status">Download...</div>
         
-        <button id="startBtn" style="display:none;" onclick="startCamera()">ابدأ الفحص الآن</button>
+        <button id="startBtn" style="display:none;" onclick="startCamera()">Scan now</button>
         
         <div id="reader"></div>
         <div id="result" class="result-box" onclick="startCamera()"></div>
@@ -32,12 +32,10 @@
 
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script>
-        // ✅ اللينك الجديد بتاعك محطوط هنا بالظبط
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNLkRLIyDKf3LDZtL_3Nb5fUvJSPlX3R0JV_fbJRGeDswDXJO7gjHrqDau675cj1nBVQ/exec';
         let localData = []; 
         let html5QrCode;
 
-        // تحميل كل البيانات فور فتح الصفحة
         window.onload = function() {
             fetch(`${SCRIPT_URL}?action=fetchAll`)
             .then(res => res.json())
@@ -62,7 +60,6 @@
                 { facingMode: "environment" },
                 { fps: 30, qrbox: 250 },
                 (decodedText) => {
-                    // الفحص اللحظي من الذاكرة المحلية
                     const student = localData.find(s => s.barcode === decodedText);
                     
                     html5QrCode.stop().then(() => {
@@ -77,23 +74,42 @@
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
 
+            // تظبيط الوقت بالساعة والدقيقة للواجهة
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var scanTime = hours + ':' + minutes + ' ' + ampm;
+
             if (!student) {
                 resultDiv.className = 'result-box error';
-                resultDiv.innerHTML = "Wrong Qr code<br><span style='font-size:14px;'>(اضغط هنا للفحص مرة أخرى)</span>";
+                resultDiv.innerHTML = "Wrong Qr code<br><span style='font-size:14px;'>(Scan again)</span>";
             } else if (student.status === "Paid") {
+                // رجعنا الجدول الشيك في حالة الكود المستخدم
                 resultDiv.className = 'result-box error';
-                resultDiv.innerHTML = `Ticket already Scanned!: ${student.name}<br><span style='font-size:14px;'>(Scan)</span>`;
-            } else {
-                // نجاح لحظي
-                resultDiv.className = 'result-box success';
-                resultDiv.innerHTML = `scanned.<br>
+                resultDiv.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;">❌ Ticket already Scanned!</h3>
                     <table>
                         <tr><th>الاسم</th><td>${student.name}</td></tr>
                         <tr><th>الباقة</th><td>${student.choice}</td></tr>
                         <tr><th>السعر</th><td style="color:#d9534f; font-weight:bold;">EGP ${student.price}</td></tr>
-                    </table><br><span style='font-size:14px;'>(Scan)</span>`;
+                    </table><br><span style='font-size:14px;'>(Scan again)</span>`;
+            } else {
+                // نجاح لحظي مع إضافة الوقت
+                resultDiv.className = 'result-box success';
+                resultDiv.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;">✅ Scanned.</h3>
+                    <table>
+                        <tr><th>الاسم</th><td>${student.name}</td></tr>
+                        <tr><th>الباقة</th><td>${student.choice}</td></tr>
+                        <tr><th>السعر</th><td style="color:#d9534f; font-weight:bold;">EGP ${student.price}</td></tr>
+                        <tr><th>الوقت</th><td style="direction: ltr; font-weight:bold;">${scanTime}</td></tr>
+                    </table><br><span style='font-size:14px;'>(Scan again)</span>`;
                 
-                // تحديث الحالة محلياً عشان ميصورش مرتين ورا بعض
+                // تحديث الحالة محلياً
                 student.status = "Paid";
 
                 // إرسال التحديث للشيت في الخلفية 
