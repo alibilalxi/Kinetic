@@ -22,25 +22,27 @@
         input[type="text"], input[type="number"], select { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px; }
         input:focus, select:focus { border-color: #1e3c72; outline: none; box-shadow: 0 0 8px rgba(30, 60, 114, 0.3); }
         
-        .email-group { display: flex; gap: 10px; direction: ltr; }
-        .email-group input { flex: 2; text-align: right; }
-        .email-group span { margin-top: 10px; font-weight: bold; font-size: 18px; color: #555; }
-        .email-group select { flex: 1; }
+        /* تنسيق الإيميل الكلاسيكي (LTR) */
+        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: #fdfdfd; padding: 10px; border: 2px solid #ccc; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .email-group input { flex: 2; text-align: left; border: 1px solid #aaa; margin: 0; box-shadow: none; font-family: Tahoma, sans-serif; font-size: 16px; }
+        .email-group input:focus { border-color: #1e3c72; }
+        .email-group select { flex: 1.2; border: 1px solid #aaa; margin: 0; font-family: Tahoma, sans-serif; background: #fff; cursor: pointer; }
+        .email-group span { font-weight: bold; font-size: 20px; color: #1e3c72; font-family: 'Amiri', serif; }
         
         .invalid-input { border: 2px solid #dc3545 !important; background-color: #fff8f8; }
         .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        /* ستايل جديد للاختيارات بـ الصور المصغرة (Thumbnails) */
+        /* ستايل الاختيارات بالاتجاه الجديد (LTR) */
         .choices-list { display: flex; flex-direction: column; gap: 15px; }
-        .choice-card { border: 2px solid #ddd; padding: 10px; border-radius: 10px; cursor: pointer; background: rgba(249, 249, 249, 0.9); transition: all 0.3s ease; display: flex; align-items: center; color: #222; }
+        .choice-card { border: 2px solid #ddd; padding: 10px 15px; border-radius: 10px; cursor: pointer; background: rgba(249, 249, 249, 0.9); transition: all 0.3s ease; display: flex; align-items: center; color: #222; direction: ltr; text-align: left; }
         .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
-        .choice-card input { margin-left: 15px; transform: scale(1.4); cursor: pointer; }
+        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; }
         
         /* تنسيق الصورة المصغرة والنص */
-        .choice-thumb { width: 50px; height: 50px; border-radius: 8px; margin-left: 15px; object-fit: cover; border: 1px solid #ccc; }
-        .choice-text-container { flex: 1; display: flex; flex-direction: column; }
-        .choice-title { font-weight: 700; font-size: 16px; margin-bottom: 2px; }
-        .choice-price { color: #d9534f; font-weight: bold; font-size: 14px; direction: ltr; text-align: right; }
+        .choice-thumb { width: 60px; height: 60px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: cover; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .choice-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #111; line-height: 1.3; }
+        .choice-price { color: #d9534f; font-weight: bold; font-size: 15px; }
 
         button { width: 100%; padding: 15px; background: #1e3c72; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
         button:hover { background: #152b52; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -67,13 +69,13 @@
         @media (max-width: 600px) {
             .container { margin: 20px 15px; padding: 20px; }
             h2 { font-size: 26px; }
-            .choices-list { gap: 10px; }
             .choice-card { padding: 8px; }
-            .choice-thumb { width: 40px; height: 40px; margin-left: 10px; }
-            .choice-title { font-size: 14px; }
-            .email-group { flex-direction: column; direction: rtl; }
-            .email-group input { text-align: right; }
-            .email-group span { display: none; }
+            .choice-thumb { width: 45px; height: 45px; margin-right: 10px; }
+            .choice-title { font-size: 13px; }
+            /* تعديل الإيميل في الموبايل ليبقى في سطر واحد LTR */
+            .email-group { flex-direction: row; padding: 8px; }
+            .email-group input { font-size: 14px; }
+            .email-group select { font-size: 13px; }
         }
     </style>
 </head>
@@ -103,9 +105,10 @@
             <div class="form-group">
                 <label>اختر باقة الحجز المطلوبة:</label>
                 <div class="choices-list">
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required>
-                        <img src="https://via.placeholder.com/50/28a745/ffffff?text=Course" alt="Course" class="choice-thumb">
+                        <img src="Course.jpg" alt="Course" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Course + [397 Questions for Training with Answers]</span>
                             <span class="choice-price">EGP 200</span>
@@ -114,7 +117,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200">
-                        <img src="https://via.placeholder.com/50/dc3545/ffffff?text=Problems" alt="Problems" class="choice-thumb">
+                        <img src="Problems.jpg" alt="Problems" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Problems [1404 Questions and Problems with Answer]</span>
                             <span class="choice-price">EGP 200</span>
@@ -123,7 +126,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Final Examination [575 Questions]" data-price="200">
-                        <img src="https://via.placeholder.com/50/007bff/ffffff?text=Exam" alt="Exam" class="choice-thumb">
+                        <img src="Examination.jpg" alt="Exam" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Final Examination (Science & Education) [575 Questions With Answer]</span>
                             <span class="choice-price">EGP 200</span>
@@ -132,7 +135,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + Problem [ 1801 Questions]" data-price="400">
-                        <img src="https://via.placeholder.com/50/17a2b8/ffffff?text=C+P" alt="Course + Problems" class="choice-thumb">
+                        <img src="C+P.jpg" alt="Course + Problems" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Course + Problem [ 1801 Questions and Problems with Answer]</span>
                             <span class="choice-price">EGP 400</span>
@@ -141,7 +144,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + Examination [971 Questions]" data-price="400">
-                        <img src="https://via.placeholder.com/50/ffc107/333333?text=C+E" alt="Course + Exam" class="choice-thumb">
+                        <img src="C+E.jpg" alt="Course + Exam" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Course + Examination [971 Questions with Answer]</span>
                             <span class="choice-price">EGP 400</span>
@@ -150,7 +153,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Problems + Examination [1980 Questions]" data-price="400">
-                        <img src="https://via.placeholder.com/50/6c757d/ffffff?text=P+E" alt="Problems + Exam" class="choice-thumb">
+                        <img src="P+E.jpg" alt="Problems + Exam" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Problems + Examination [1980 Questions with Answer]</span>
                             <span class="choice-price">EGP 400</span>
@@ -159,7 +162,7 @@
                     
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600">
-                        <img src="https://via.placeholder.com/50/1e3c72/ffffff?text=ALL" alt="Full Package" class="choice-thumb">
+                        <img src="3X1.jpg" alt="Full Package" class="choice-thumb">
                         <div class="choice-text-container">
                             <span class="choice-title">Course + Problems + Examination [ 2375 Question + Problems With Answer]</span>
                             <span class="choice-price">EGP 600</span>
@@ -194,6 +197,8 @@
             <div class="form-group">
                 <label>البريد الإلكتروني:</label>
                 <div class="email-group">
+                    <input type="text" id="emailUser" placeholder="username" required>
+                    <span>@</span>
                     <select id="emailDomain" required>
                         <option value="gmail.com">gmail.com</option>
                         <option value="icloud.com">icloud.com</option>
@@ -201,8 +206,6 @@
                         <option value="outlook.com">outlook.com</option>
                         <option value="hotmail.com">hotmail.com</option>
                     </select>
-                    <span>@</span>
-                    <input type="text" id="emailUser" placeholder="اسم المستخدم (بدون @)" required>
                 </div>
             </div>
 
@@ -248,7 +251,6 @@
                 correctLevel : QRCode.CorrectLevel.H
             });
 
-            // تعديل لعرض النص الطويل بشكل منسق في التذكرة
             document.getElementById('displayChoice').innerText = `${choice}`;
             document.getElementById('displayPrice').innerText = `L.E: ${price}`;
         }
@@ -283,10 +285,10 @@
             if (this.value.includes('@')) {
                 this.value = this.value.split('@')[0];
             }
-            this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '');
+            // التعديل هنا: منع المسافات، والحروف العربي، وتحويل أي حرف لـ Small فوراً
+            this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        // حط اللينك الجديد بتاع الشيت هنا
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -303,7 +305,6 @@
 
             const currentId = idInput.value;
             
-            // 🚀 الذاكرة اللحظية (Local Cache) للسرعة الصاروخية
             const localCache = JSON.parse(localStorage.getItem('ticketCache')) || {};
             
             if (localCache[currentId]) {
@@ -374,7 +375,6 @@
 
         function downloadTicket() {
             const ticket = document.getElementById('ticketCard');
-            // تسمية الصورة برقم القومي عشان المنسق ميتلخبطش
             const natId = document.getElementById('nationalId').value;
             html2canvas(ticket, { 
                 scale: 3,
