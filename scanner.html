@@ -10,9 +10,9 @@
         .container { max-width: 500px; margin: 0 auto; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
         h2 { color: #fff; font-family: 'Amiri', serif; margin-bottom: 20px; }
         
-        #reader { width: 100%; border-radius: 10px; overflow: hidden; border: 4px solid #1e3c72; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; border: 4px solid #1e3c72; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); display: none; margin-bottom: 20px; }
         
-        .result-box { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; animation: fadeIn 0.3s; }
+        .result-box { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; animation: fadeIn 0.3s; cursor: pointer; }
         .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
         
@@ -21,8 +21,8 @@
         th { background: #1e3c72; color: #fff; width: 30%; font-weight: bold; }
         td { font-weight: bold; color: #333; }
         
-        .action-btn { margin-top: 20px; padding: 15px 25px; font-size: 20px; border-radius: 8px; cursor: pointer; background: #28a745; color: white; border: none; font-weight: bold; font-family: 'Tajawal', sans-serif; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; display: none;}
-        .action-btn:hover { background: #218838; }
+        .action-btn { margin-top: 20px; padding: 15px 25px; font-size: 20px; border-radius: 8px; cursor: pointer; background: #28a745; color: white; border: none; font-weight: bold; font-family: 'Tajawal', sans-serif; width: 100%; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s;}
+        .action-btn:active { transform: scale(0.95); }
         
         .loading { display: none; margin-top: 15px; font-size: 18px; font-weight: bold; color: #ffc107; }
 
@@ -33,83 +33,94 @@
     <div class="container">
         <h2>نظام فحص الـ QR Code</h2>
         
+        <button id="startBtn" class="action-btn" onclick="startCamera()">فتح الكاميرا وبدء الفحص</button>
+        
         <div id="reader"></div>
         <div id="loading" class="loading">⏳ جاري فحص السيرفر...</div>
         
-        <div id="result" class="result-box"></div>
-        
-        <button id="scanAgainBtn" class="action-btn" onclick="startScanner()">مسح تذكرة جديدة</button>
+        <div id="result" class="result-box" onclick="startCamera()"></div>
     </div>
 
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script>
-        // ⚠️ حط لينك جوجل سكريبت الجديد هنا ⚠️
-        const GOOGLE_SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
-        let html5QrcodeScanner;
+        // ✅ حطيتلك اللينك بتاعك جاهز بالمللي
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
+        let html5QrCode;
 
-        function onScanSuccess(decodedText) {
-            // أول ما يلقط الكود يوقف الكاميرا فوراً
-            html5QrcodeScanner.clear();
-            document.getElementById('loading').style.display = 'block';
+        function startCamera() {
+            document.getElementById('startBtn').style.display = 'none';
             document.getElementById('result').style.display = 'none';
+            document.getElementById('reader').style.display = 'block';
 
-            fetch(`${GOOGLE_SCRIPT_URL}?action=scan&barcode=${decodedText}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('loading').style.display = 'none';
-                const resultDiv = document.getElementById('result');
-                resultDiv.style.display = 'block';
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
 
-                if(data.status === 'success') {
-                    resultDiv.className = 'result-box success';
-                    resultDiv.innerHTML = `
-                        <h3 style="margin:0 0 10px 0;">✅ تم تأكيد الدفع</h3>
-                        <table>
-                            <tr><th>الاسم</th><td>${data.name}</td></tr>
-                            <tr><th>الباقة</th><td>${data.choice}</td></tr>
-                            <tr><th>السعر</th><td style="color:#d9534f;">EGP ${data.price}</td></tr>
-                        </table>`;
-                } else if(data.status === 'already_paid') {
-                    resultDiv.className = 'result-box error';
-                    resultDiv.innerHTML = `
-                        <h3 style="margin:0 0 10px 0;">❌ تحذير: التذكرة مستخدمة!</h3>
-                        <table>
-                            <tr><th>الاسم</th><td>${data.name}</td></tr>
-                            <tr><th>الباقة</th><td>${data.choice}</td></tr>
-                        </table>`;
-                } else {
-                    resultDiv.className = 'result-box error';
-                    resultDiv.innerHTML = `<h3 style="margin:0;">⚠️ كود مزيف أو غير مسجل!</h3>`;
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 30, qrbox: { width: 250, height: 250 }, formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] },
+                (decodedText) => {
+                    html5QrCode.stop().then(() => {
+                        document.getElementById('reader').style.display = 'none';
+                        document.getElementById('loading').style.display = 'block';
+                        
+                        // ضفت هنا redirect: follow عشان الاتصال ميفصلش
+                        fetch(`${GOOGLE_SCRIPT_URL}?action=scan&barcode=${decodedText}`, {
+                            method: 'GET',
+                            redirect: 'follow'
+                        })
+                        .then(res => res.json())
+                        .then(data => showResult(data))
+                        .catch(err => {
+                            console.error(err);
+                            showError();
+                        });
+                    });
                 }
-                document.getElementById('scanAgainBtn').style.display = 'block';
-            })
-            .catch(err => {
-                document.getElementById('loading').style.display = 'none';
-                const resultDiv = document.getElementById('result');
-                resultDiv.style.display = 'block';
-                resultDiv.className = 'result-box error';
-                resultDiv.innerHTML = "<h3 style='margin:0;'>حدث خطأ في الاتصال بالإنترنت!</h3>";
-                document.getElementById('scanAgainBtn').style.display = 'block';
+            ).catch(err => {
+                alert("لم يتم العثور على كاميرا أو لم تقم بإعطاء الصلاحية!");
+                document.getElementById('startBtn').style.display = 'block';
             });
         }
 
-        function startScanner() {
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('scanAgainBtn').style.display = 'none';
-            
-            // إعدادات السرعة القصوى (30 فريم والتركيز على الـ QR Code فقط)
-            const config = {
-                fps: 30, 
-                qrbox: { width: 250, height: 250 },
-                formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ] 
-            };
+        function showResult(data) {
+            document.getElementById('loading').style.display = 'none';
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
 
-            html5QrcodeScanner = new Html5QrcodeScanner("reader", config, false);
-            html5QrcodeScanner.render(onScanSuccess);
+            if(data.status === 'success') {
+                resultDiv.className = 'result-box success';
+                resultDiv.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;">✅ تم تأكيد الدفع</h3>
+                    <table>
+                        <tr><th>الاسم</th><td>${data.name}</td></tr>
+                        <tr><th>الباقة</th><td>${data.choice}</td></tr>
+                        <tr><th>السعر</th><td style="color:#d9534f;">EGP ${data.price}</td></tr>
+                    </table>
+                    <p style="margin-top:15px; font-size:14px;">(اضغط هنا لمسح تذكرة أخرى)</p>`;
+            } else if(data.status === 'already_paid') {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <h3 style="margin:0 0 10px 0;">❌ تحذير: التذكرة مستخدمة!</h3>
+                    <table>
+                        <tr><th>الاسم</th><td>${data.name}</td></tr>
+                        <tr><th>الباقة</th><td>${data.choice}</td></tr>
+                    </table>
+                    <p style="margin-top:15px; font-size:14px;">(اضغط هنا لمسح تذكرة أخرى)</p>`;
+            } else {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `<h3 style="margin:0;">⚠️ كود مزيف أو غير مسجل!</h3>
+                <p style="margin-top:15px; font-size:14px;">(اضغط هنا لمسح تذكرة أخرى)</p>`;
+            }
         }
 
-        // تشغيل أوتوماتيك أول ما الصفحة تفتح
-        window.onload = startScanner;
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result-box error';
+            resultDiv.innerHTML = "<h3 style='margin:0;'>حدث خطأ في الاتصال بالإنترنت!</h3><p style='margin-top:15px; font-size:14px;'>(اضغط هنا للمحاولة مرة أخرى)</p>";
+        }
     </script>
 </body>
 </html>
