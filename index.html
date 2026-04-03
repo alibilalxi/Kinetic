@@ -22,7 +22,6 @@
         input[type="text"], input[type="number"], select { width: 100%; padding: 12px; border: 2px solid #ccc; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px; }
         input:focus, select:focus { border-color: #1e3c72; outline: none; box-shadow: 0 0 8px rgba(30, 60, 114, 0.3); }
         
-        /* تنسيق الإيميل الكلاسيكي (LTR) */
         .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: #fdfdfd; padding: 10px; border: 2px solid #ccc; border-radius: 8px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
         .email-group input { flex: 2; text-align: left; border: 1px solid #aaa; margin: 0; box-shadow: none; font-family: Tahoma, sans-serif; font-size: 16px; }
         .email-group input:focus { border-color: #1e3c72; }
@@ -32,25 +31,12 @@
         .invalid-input { border: 2px solid #dc3545 !important; background-color: #fff8f8; }
         .error-message { color: #dc3545; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        /* ستايل الاختيارات بالاتجاه الجديد (LTR) */
         .choices-list { display: flex; flex-direction: column; gap: 15px; }
         .choice-card { border: 2px solid #ddd; padding: 10px 15px; border-radius: 10px; cursor: pointer; background: rgba(249, 249, 249, 0.9); transition: all 0.3s ease; display: flex; align-items: center; color: #222; direction: ltr; text-align: left; }
         .choice-card:hover { background: #e0eaf5; border-color: #1e3c72; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
         .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; }
         
-        /* التعديل السحري للصور هنا لمنع القص */
-        .choice-thumb { 
-            width: 60px; 
-            height: 60px; 
-            border-radius: 8px; 
-            margin-right: 15px; 
-            margin-left: 0; 
-            object-fit: contain; /* ده اللي بيمنع القص */
-            background-color: #ffffff; /* خلفية بيضا عشان اللوجو ينور */
-            padding: 3px; /* برواز داخلي صغير */
-            border: 1px solid #ccc; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
+        .choice-thumb { width: 60px; height: 60px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; border: 1px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
         .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .choice-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #111; line-height: 1.3; }
@@ -64,7 +50,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 2px dashed #ccc; padding-top: 20px; }
-        #ticketCard { background: white; padding: 30px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        #ticketCard { background: white; padding: 30px; border: 3px solid #1e3c72; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box;}
         #downloadBtn { background: #28a745; font-size: 18px; }
         #downloadBtn:hover { background: #218838; }
         .ticket-note { font-size: 20px; color: #1e3c72; font-weight: bold; margin-bottom: 15px; }
@@ -76,7 +62,7 @@
         .modal-btn { background: #b8860b; color: #fff; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; }
         .modal-btn:hover { background: #997009; }
 
-        #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; }
+        #qrcode canvas, #qrcode img { width: 180px !important; height: 180px !important; margin: 0 auto; }
 
         @media (max-width: 600px) {
             .container { margin: 20px 15px; padding: 20px; }
@@ -84,7 +70,6 @@
             .choice-card { padding: 8px; }
             .choice-thumb { width: 45px; height: 45px; margin-right: 10px; }
             .choice-title { font-size: 13px; }
-            /* تعديل الإيميل في الموبايل ليبقى في سطر واحد LTR */
             .email-group { flex-direction: row; padding: 8px; }
             .email-group input { font-size: 14px; }
             .email-group select { font-size: 13px; }
@@ -231,7 +216,7 @@
             <div class="ticket-note">يرجى إبراز التذكرة عند تأكيد الحجز مع المنسق</div>
             <div id="ticketCard">
                 <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
-                <h4 id="displayChoice" style="margin: 15px 0; font-size: 20px; font-weight: bold; color: #111; max-width: 300px; line-height: 1.4;"></h4>
+                <h4 id="displayChoice" style="margin: 15px auto; font-size: 20px; font-weight: bold; color: #111; max-width: 300px; line-height: 1.4;"></h4>
                 <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
             <br>
@@ -300,7 +285,8 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
+        // ⚠️ حط لينك جوجل سكريبت بتاعك هنا ⚠️
+        const GOOGLE_SCRIPT_URL = 'YOUR_WEB_APP_URL_HERE';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -358,14 +344,12 @@
                 if(result.status === 'duplicate') {
                     localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
                     localStorage.setItem('ticketCache', JSON.stringify(localCache));
-                    
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                     document.getElementById('resultArea').style.display = 'none'; 
                     document.getElementById('duplicateModal').style.display = 'flex';
                 } else {
                     localCache[currentId] = { barcode: result.barcode, choice: result.choiceName, price: result.price };
                     localStorage.setItem('ticketCache', JSON.stringify(localCache));
-                    
                     generateBarcodeUI(result.barcode, result.choiceName, result.price);
                 }
             })
@@ -386,10 +370,7 @@
         function downloadTicket() {
             const ticket = document.getElementById('ticketCard');
             const natId = document.getElementById('nationalId').value;
-            html2canvas(ticket, { 
-                scale: 3,
-                backgroundColor: null
-            }).then(canvas => {
+            html2canvas(ticket, { scale: 3, backgroundColor: null }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = 'Ticket_' + natId + '.png';
                 link.href = canvas.toDataURL('image/png');
