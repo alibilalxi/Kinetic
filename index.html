@@ -285,7 +285,8 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKtdo3wVo82uMVULSKjUje0XN1PSjwo-oNCv2QEL6yWi3CyGmw49dJ0-lFwmbv716-eA/exec';
+        // ✅ اللينك الجديد بتاعك محطوط هنا بالظبط
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwWEegXteSQXYBHCf1QOSOVW6GI-y__3ciUAbLNcQcyrGGVsWrL9u73UB75Vc37XXg/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -322,7 +323,7 @@
             btnText.innerText = "جاري التأكيد...";
             btnSpinner.style.display = "block";
 
-            // إرسال البيانات مباشرة للسيرفر (الشيت) بدون فحص الذاكرة
+            // السيستم هيسأل الشيت مباشرة (بدون الذاكرة) عشان مشكلة الحذف تتلغي
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
