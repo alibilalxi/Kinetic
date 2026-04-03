@@ -1,121 +1,71 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kinetic Scanner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background: #0f2027; color: white; margin: 0; padding: 15px; text-align: center; }
-        .container { max-width: 500px; margin: 0 auto; }
-        #reader { width: 100%; border-radius: 15px; overflow: hidden; border: 4px solid #1e3c72; background: #000; display: none; margin-bottom: 15px;}
-        .result-box { margin-top: 20px; padding: 15px; border-radius: 10px; display: none; font-size: 18px; cursor: pointer; }
-        .success { background: #28a745; color: white; }
-        .error { background: #dc3545; color: white; }
-        .sync-status { padding: 10px; color: #ffc107; font-weight: bold; margin-bottom: 10px;}
-        button { padding: 15px 25px; font-size: 20px; border-radius: 10px; cursor: pointer; background: #1e3c72; color: white; border: none; width: 100%; margin-top: 10px; transition: 0.3s;}
-        button:hover { background: #152b52; }
-        table { width: 100%; background: white; color: black; border-radius: 8px; margin-top: 10px; border-collapse: collapse; }
-        td, th { padding: 10px; border: 1px solid #ddd; text-align: right; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2> Scan</h2>
-        <div id="syncMsg" class="sync-status">Download...</div>
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  var fullEmail = data.emailUser + "@" + data.emailDomain;
+  var dataRange = sheet.getDataRange().getValues();
+  
+  for (var i = 1; i < dataRange.length; i++) {
+    if (dataRange[i][1] == data.fullName || dataRange[i][2] == data.nationalId || dataRange[i][4] == fullEmail) {
+      return ContentService.createTextOutput(JSON.stringify({
+        "status": "duplicate", "barcode": dataRange[i][7], "choiceName": dataRange[i][5], "price": dataRange[i][6]       
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
+  var barcodeValue = data.barcode;
+  sheet.appendRow([ new Date(), data.fullName, data.nationalId, data.status, fullEmail, data.itemChoice, data.price, barcodeValue, "Pending" ]);
+
+  return ContentService.createTextOutput(JSON.stringify({
+    "status": "success", "barcode": barcodeValue, "choiceName": data.itemChoice, "price": data.price
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  if(e.parameter.action == "fetchAll") {
+    var values = sheet.getDataRange().getValues();
+    var data = [];
+    for (var i = 1; i < values.length; i++) {
+      data.push({
+        name: values[i][1],
+        choice: values[i][5],
+        price: values[i][6],
+        barcode: values[i][7],
+        status: values[i][8]
+      });
+    }
+    return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if(e.parameter.action == "scan") {
+    var dataRange = sheet.getDataRange().getValues();
+    var codeToFind = e.parameter.barcode;
+    for (var i = 1; i < dataRange.length; i++) {
+      if (dataRange[i][7] == codeToFind) {
+        var rowIndex = i + 1;
         
-        <button id="startBtn" style="display:none;" onclick="startCamera()">Scan now</button>
+        // رجعنا التاريخ والوقت كاملين زي الأول بالظبط
+        var now = new Date();
+        var days = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+        var months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        var formattedDate = days[now.getDay()] + " " + now.getDate() + " " + months[now.getMonth()];
         
-        <div id="reader"></div>
-        <div id="result" class="result-box" onclick="startCamera()"></div>
-    </div>
-
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwNLkRLIyDKf3LDZtL_3Nb5fUvJSPlX3R0JV_fbJRGeDswDXJO7gjHrqDau675cj1nBVQ/exec';
-        let localData = []; 
-        let html5QrCode;
-
-        window.onload = function() {
-            fetch(`${SCRIPT_URL}?action=fetchAll`)
-            .then(res => res.json())
-            .then(data => {
-                localData = data;
-                document.getElementById('syncMsg').innerHTML = "ready to scan";
-                document.getElementById('startBtn').style.display = "block";
-            })
-            .catch(err => {
-                document.getElementById('syncMsg').innerHTML = "❌ خطأ في المزامنة! تأكد من الإنترنت.";
-            });
-        };
-
-        function startCamera() {
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('reader').style.display = 'block';
-            document.getElementById('startBtn').style.display = 'none';
-
-            if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 30, qrbox: 250 },
-                (decodedText) => {
-                    const student = localData.find(s => s.barcode === decodedText);
-                    
-                    html5QrCode.stop().then(() => {
-                        document.getElementById('reader').style.display = 'none';
-                        processResult(student, decodedText);
-                    });
-                }
-            );
-        }
-
-        function processResult(student, barcode) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.style.display = 'block';
-
-            // تظبيط الوقت بالساعة والدقيقة للواجهة
-            var now = new Date();
-            var hours = now.getHours();
-            var minutes = now.getMinutes();
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var scanTime = hours + ':' + minutes + ' ' + ampm;
-
-            if (!student) {
-                resultDiv.className = 'result-box error';
-                resultDiv.innerHTML = "Wrong Qr code<br><span style='font-size:14px;'>(Scan again)</span>";
-            } else if (student.status === "Paid") {
-                // رجعنا الجدول الشيك في حالة الكود المستخدم
-                resultDiv.className = 'result-box error';
-                resultDiv.innerHTML = `
-                    <h3 style="margin:0 0 10px 0;">❌ Ticket already Scanned!</h3>
-                    <table>
-                        <tr><th>الاسم</th><td>${student.name}</td></tr>
-                        <tr><th>الباقة</th><td>${student.choice}</td></tr>
-                        <tr><th>السعر</th><td style="color:#d9534f; font-weight:bold;">EGP ${student.price}</td></tr>
-                    </table><br><span style='font-size:14px;'>(Scan again)</span>`;
-            } else {
-                // نجاح لحظي مع إضافة الوقت
-                resultDiv.className = 'result-box success';
-                resultDiv.innerHTML = `
-                    <h3 style="margin:0 0 10px 0;">✅ Scanned.</h3>
-                    <table>
-                        <tr><th>الاسم</th><td>${student.name}</td></tr>
-                        <tr><th>الباقة</th><td>${student.choice}</td></tr>
-                        <tr><th>السعر</th><td style="color:#d9534f; font-weight:bold;">EGP ${student.price}</td></tr>
-                        <tr><th>الوقت</th><td style="direction: ltr; font-weight:bold;">${scanTime}</td></tr>
-                    </table><br><span style='font-size:14px;'>(Scan again)</span>`;
-                
-                // تحديث الحالة محلياً
-                student.status = "Paid";
-
-                // إرسال التحديث للشيت في الخلفية 
-                fetch(`${SCRIPT_URL}?action=scan&barcode=${barcode}`);
-            }
-        }
-    </script>
-</body>
-</html>
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var ampm = hours >= 12 ? 'م' : 'ص';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var formattedTime = hours + ':' + minutes + ' ' + ampm;
+        
+        sheet.getRange(rowIndex, 9).setValue("Paid"); 
+        sheet.getRange(rowIndex, 10).setValue(formattedDate);
+        sheet.getRange(rowIndex, 11).setValue(formattedTime); // عمود الوقت
+        sheet.getRange(rowIndex, 9, 1, 3).setBackground("#d4edda"); 
+        
+        return ContentService.createTextOutput(JSON.stringify({ "status": "success" })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+  }
+}
