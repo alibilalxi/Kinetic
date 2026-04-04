@@ -11,68 +11,81 @@
 
     <style>
         body { margin: 0; font-family: 'Tajawal', sans-serif; background-color: #020617; color: #ffffff; overflow-x: hidden; min-height: 100vh; }
+        
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(-45deg, #020617, #0f172a, #082f49, #022c22); background-size: 400% 400%; animation: gradientBG 20s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        .glass-panel { background: rgba(5, 10, 20, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .glass-panel { background: rgba(5, 10, 20, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(0, 229, 255, 0.1); }
         .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
         
         .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(0, 229, 255, 0.4); padding-bottom: 20px; }
         h2.main-title { color: #ffffff; font-size: 38px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); font-family: 'Amiri', serif; }
         h3.pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 10px 0; font-family: 'Amiri', serif; }
         .booking-date { color: #10b981; font-size: 17px; font-weight: bold; margin-bottom: 8px; }
+        .pricing-subtitle { color: #cbd5e1; font-size: 16px; margin: 0; }
 
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #f8fafc; }
         input[type="text"], input[type="number"], select { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 16px; }
-        input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
+        input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); background: rgba(0, 0, 0, 0.7); }
+        option { background: #0f172a; color: #fff; }
         
         .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
-        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; background: transparent; }
+        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; box-shadow: none; background: transparent; }
         .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
         .email-group span { font-weight: bold; font-size: 20px; color: #00e5ff; font-family: 'Amiri', serif; }
         
+        /* 🟢 تنسيق الاختيارات عشان متلزقش في بعضها 🟢 */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
         .choice-card { border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.03); display: flex; align-items: center; direction: ltr; text-align: left; transition: 0.3s;}
-        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; transform: translateX(5px); }
-        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #00e5ff; }
-        .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; }
+        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.4);}
+        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #00e5ff; flex-shrink: 0; }
+        .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; flex-shrink: 0; }
+        .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
         .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #ffffff; line-height: 1.4; }
-        .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; }
+        .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; text-shadow: 0 0 5px rgba(245, 158, 11, 0.4);}
 
+        /* 🟢 طرق الدفع 🟢 */
         .payment-methods { display: flex; gap: 15px; margin-bottom: 20px; }
-        .pay-method { flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 10px;}
-        .pay-method:hover, .pay-method:has(input:checked) { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .pay-method { flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;}
+        .pay-method:hover, .pay-method:has(input:checked) { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);}
         .pay-method input { display: none; }
         .pay-icon { width: 40px; height: 40px; }
+        .pay-method div { font-weight: bold; color: #fff; font-size: 16px; }
 
+        /* قسم انستا باي */
         .instapay-section { display: none; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); text-align: center; margin-bottom: 20px; }
         
-        /* زرار انستا باي الجديد */
-        .instapay-link-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 25px; border-radius: 10px; font-weight: bold; font-size: 18px; margin: 15px 0; border: 1px solid #8b5cf6; text-decoration: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4); width: 100%; box-sizing: border-box;}
-        .instapay-link-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .instapay-link-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 25px; border-radius: 10px; font-weight: bold; font-size: 18px; margin: 15px 0; border: 1px solid #8b5cf6; text-decoration: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4); width: 100%; box-sizing: border-box; font-family: 'Tajawal', sans-serif;}
+        .instapay-link-btn:hover { filter: brightness(1.1); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.6); transform: translateY(-2px);}
+        .instapay-link-btn svg { width: 24px; height: 24px; fill: currentColor; }
 
-        .upload-btn { background: rgba(255,255,255,0.05); color: #38bdf8; padding: 15px 25px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; margin-top: 10px; border: 1px dashed #38bdf8; width: 100%; box-sizing: border-box;}
+        .upload-btn { background: rgba(255,255,255,0.05); color: #38bdf8; padding: 15px 25px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; margin-top: 10px; border: 1px dashed #38bdf8; transition: 0.3s; width: 100%; box-sizing: border-box;}
+        .upload-btn:hover { background: rgba(56, 189, 248, 0.1); }
         .upload-btn input { display: none; }
 
-        button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        button.submit-btn:disabled { background: #475569; border-color: #475569; cursor: not-allowed; }
+        button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(2, 132, 199, 0.5);}
+        button.submit-btn:hover { filter: brightness(1.2); box-shadow: 0 5px 30px rgba(2, 132, 199, 0.7); }
+        button.submit-btn:disabled { background: #475569; border-color: #475569; cursor: not-allowed; box-shadow: none;}
 
         .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* النتائج */
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 1px dashed rgba(0, 229, 255, 0.4); padding-top: 20px; }
-        #ticketCard { background: #ffffff; color: #000; padding: 30px; border: 4px solid #0284c7; border-radius: 12px; display: inline-block; margin-bottom: 20px; width: 100%; box-sizing: border-box;}
-        #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;}
+        #ticketCard { background: #ffffff; color: #000; padding: 30px; border: 4px solid #0284c7; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;}
+        #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; font-size: 18px; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-family: 'Tajawal', sans-serif; font-weight: bold;}
+        .ticket-note { font-size: 20px; color: #00e5ff; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 5px rgba(0,229,255,0.5);}
 
-        .success-message { display: none; text-align: center; padding: 40px 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 15px; margin-top: 20px;}
-        .success-message h3 { color: #10b981; }
+        .success-message { display: none; text-align: center; padding: 40px 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 15px; margin-top: 20px; backdrop-filter: blur(5px);}
+        .success-message h3 { color: #10b981; font-size: 24px; margin-bottom: 15px; }
+        .success-message p { color: #e2e8f0; font-size: 18px; line-height: 1.6; }
 
-        .footer-copyright { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; color: #cbd5e1; direction: ltr; }
-        .footer-copyright span a { color: #00e5ff; font-weight: bold; text-decoration: none; }
+        .footer-copyright { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; color: #cbd5e1; direction: ltr; font-family: Tahoma, sans-serif; position: relative; z-index: 1;}
+        .footer-copyright span a { color: #00e5ff; font-weight: bold; text-decoration: none; text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);}
         
-        .invalid-input { border: 1px solid #ef4444 !important; }
-        .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; }
+        .invalid-input { border: 1px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
+        .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
         @media (max-width: 600px) { .container { margin: 10px; padding: 20px 15px; } }
     </style>
@@ -87,55 +100,120 @@
             <h2 class="main-title">Kinetic CD Reverse</h2>
             <h3 class="pricing-title">Price of E-learning CD</h3>
             <div class="booking-date">الحجز يبدأ من 11 فبراير حتى 11 مارس 2026</div>
+            <div class="pricing-subtitle">للطالب يختار ما يلزمه</div>
         </div>
         
         <form id="bookingForm">
             <div class="form-group">
                 <div class="choices-list">
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required><img src="C.svg" alt="C" class="choice-thumb"><div class="choice-text-container"><span class="choice-title">Course + [397 Questions for Training]</span><span class="choice-price">EGP 200</span></div></label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200"><img src="P.svg" alt="P" class="choice-thumb"><div class="choice-text-container"><span class="choice-title">Problems [1404 Questions]</span><span class="choice-price">EGP 200</span></div></label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600"><img src="CPE.svg" alt="CPE" class="choice-thumb"><div class="choice-text-container"><span class="choice-title">Full Package [2375 Questions]</span><span class="choice-price">EGP 600</span></div></label>
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required>
+                        <img src="C.svg" alt="Course" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + [397 Questions for Training with Answers]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200">
+                        <img src="P.svg" alt="Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems [1404 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Final Examination [575 Questions]" data-price="200">
+                        <img src="E.svg" alt="Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Final Examination (Science & Education) [575 Questions With Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Problem [ 1801 Questions]" data-price="400">
+                        <img src="CP.svg" alt="Course + Problems" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Problem [ 1801 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Examination [971 Questions]" data-price="400">
+                        <img src="CE.svg" alt="Course + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Examination [971 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems + Examination [1980 Questions]" data-price="400">
+                        <img src="PEsvg.svg" alt="Problems + Exam" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems + Examination [1980 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600">
+                        <img src="CPE.svg" alt="Full Package" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Problems + Examination [ 2375 Question + Problems With Answer]</span>
+                            <span class="choice-price">EGP 600</span>
+                        </div>
+                    </label>
                 </div>
             </div>
 
-            <div class="form-group"><label>الاسم ثلاثي (باللغة العربية):</label><input type="text" id="fullName" required><div id="nameError" class="error-message">❌ يرجى كتابة الاسم بالعربية!</div></div>
-            <div class="form-group"><label>الرقم القومى (14 رقم):</label><input type="text" id="nationalId" maxlength="14" required><div id="idError" class="error-message">❌ الرقم القومي غير صحيح!</div></div>
-            <div class="form-group"><label>الفرقة:</label><select id="status" required><option value="">-- اختر --</option><option value="رابعة (مستجد)">رابعة (مستجد)</option><option value="خريج">خريج</option></select></div>
+            <div class="form-group"><label>الاسم ثلاثي (باللغة العربية):</label><input type="text" id="fullName" placeholder="مثال: أحمد محمد علي" required><div id="nameError" class="error-message">❌ يرجى كتابة الاسم باللغة العربية فقط!</div></div>
+            <div class="form-group"><label>الرقم القومى:</label><input type="text" id="nationalId" maxlength="14" required><div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه 14 رقم فقط.</div></div>
+            <div class="form-group"><label>الـفرقة:</label><select id="status" required><option value="">-- اختر حالتك --</option><option value="رابعة (مستجد)">رابعة (مستجد)</option><option value="رابعة (باق)">رابعة (باق)</option><option value="خريج">خريج</option></select></div>
             <div class="form-group">
                 <label>البريد الإلكتروني:</label>
                 <div class="email-group">
-                    <input type="text" id="emailUser" required><span>@</span>
-                    <select id="emailDomain" required><option value="gmail.com">gmail.com</option><option value="hotmail.com">hotmail.com</option></select>
+                    <input type="text" id="emailUser" placeholder="username" required><span>@</span>
+                    <select id="emailDomain" required><option value="gmail.com">gmail.com</option><option value="icloud.com">icloud.com</option><option value="yahoo.com">yahoo.com</option><option value="outlook.com">outlook.com</option><option value="hotmail.com">hotmail.com</option></select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label style="color: #38bdf8;">طريقة الدفع:</label>
+                <label style="color: #38bdf8; font-size: 18px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; margin-top: 10px;">اختر طريقة الدفع:</label>
                 <div class="payment-methods">
                     <label class="pay-method" onclick="togglePayment('cash')">
                         <input type="radio" name="paymentMethod" value="Cash" checked>
-                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle></svg>
-                        <div>نقدي بالمقر</div>
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+                        <div>دفع نقدي بالمقر</div>
                     </label>
                     <label class="pay-method" onclick="togglePayment('instapay')">
                         <input type="radio" name="paymentMethod" value="InstaPay">
-                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-                        <div>InstaPay</div>
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                        <div>الدفع عبر InstaPay</div>
                     </label>
                 </div>
                 
                 <div id="instapayDetails" class="instapay-section">
-                    <p style="color: #e2e8f0;">أتمم الدفع عبر اللينك التالي:</p>
+                    <p style="color: #e2e8f0; font-size: 16px; margin-bottom: 5px;">أتمم عملية الدفع بسهولة وأمان عبر تطبيق انستا باي</p>
+                    
                     <a href="https://ipn.eg/S/al-ahlym/instapay/2XMFNv" target="_blank" class="instapay-link-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
                         Click to pay
                     </a>
-                    <hr style="border: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-                    <p style="color: #e2e8f0;">ارفع سكرين شوت الإيصال هنا:</p>
+                    
+                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                    
+                    <p style="margin: 0 0 10px 0; color: #e2e8f0;">بعد التحويل، قم بإرفاق صورة الإيصال لتأكيد حجزك</p>
                     <label class="upload-btn">
-                        📷 إرفاق الإيصال
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        إرفاق صورة الإيصال
                         <input type="file" id="receiptImage" accept="image/*" onchange="previewFile()">
                     </label>
-                    <div id="fileName" style="margin-top:10px; color:#38bdf8; font-weight: bold;"></div>
+                    <div id="fileName" style="margin-top:10px; color:#38bdf8; font-size: 14px; font-weight: bold;"></div>
                 </div>
             </div>
 
@@ -146,54 +224,68 @@
         </form>
 
         <div id="resultArea">
-            <div class="ticket-note">أبرز التذكرة للمنسق للدفع نقداً</div>
+            <div class="ticket-note">يرجى إبراز التذكرة للمنسق لدفع المبلغ نقداً</div>
             <div id="ticketCard">
                 <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
-                <h4 id="displayChoice"></h4>
-                <h4 id="displayPrice" style="color: #d9534f;"></h4>
+                <h4 id="displayChoice" style="margin: 15px auto; font-size: 20px; font-weight: bold; color: #111; max-width: 300px; line-height: 1.4;"></h4>
+                <h4 id="displayPrice" style="margin: 0; color: #d9534f; font-size: 24px; font-weight: bold;"></h4>
             </div>
             <br><button id="downloadBtn" onclick="downloadTicket()">Download Ticket</button>
         </div>
 
         <div id="successMessage" class="success-message">
-            <h3>✅ تم استلام طلبك وإيصالك!</h3>
-            <p>سيصلك إيميل تأكيد الدفع وبيانات الـ CD قريباً.</p>
+            <h3>✅ تم استلام طلبك وإيصال الدفع!</h3>
+            <p>جاري مراجعة الإيصال من قبل الإدارة.<br>سيصلك بريد إلكتروني (Email) بتأكيد الدفع وبيانات الـ CD الخاصة بك قريباً.</p>
         </div>
 
         <div class="footer-copyright">
-            &copy; 2026 | Developed by <span><a href="mailto:alibilalxi@hotmail.com">Ali Bilal</a></span>
+            &copy; 2026 All Rights Reserved | Developed by <span><a href="mailto:alibilalxi@hotmail.com">Ali Bilal</a></span>
         </div>
 
     </div>
 
     <script>
+        // إعدادات الجزيئات (Particles.js)
         particlesJS("particles-js", {
           "particles": {
             "number": { "value": 130, "density": { "enable": true, "value_area": 800 } },
             "color": { "value": "#00e5ff" }, 
-            "opacity": { "value": 0.8, "anim": { "enable": true, "speed": 1, "opacity_min": 0.2 } },
-            "size": { "value": 4 },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.8, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } },
+            "size": { "value": 4, "random": true, "anim": { "enable": false } },
             "line_linked": { "enable": true, "distance": 160, "color": "#00e5ff", "opacity": 0.6, "width": 2 },
-            "move": { "enable": true, "speed": 2.5, "random": true, "out_mode": "out" }
+            "move": { "enable": true, "speed": 2.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
           },
           "interactivity": {
-            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } },
-            "modes": { "grab": { "distance": 220, "line_linked": { "opacity": 0.9 } } }
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+            "modes": { "grab": { "distance": 220, "line_linked": { "opacity": 0.9 } }, "push": { "particles_nb": 4 } }
           },
           "retina_detect": true
         });
 
         let base64Receipt = ""; let receiptMime = "";
+
         function togglePayment(method) {
-            document.getElementById('instapayDetails').style.display = (method === 'instapay') ? 'block' : 'none';
+            const instapaySection = document.getElementById('instapayDetails');
+            const receiptInput = document.getElementById('receiptImage');
+            if (method === 'instapay') {
+                instapaySection.style.display = 'block'; receiptInput.setAttribute('required', 'true');
+            } else {
+                instapaySection.style.display = 'none'; receiptInput.removeAttribute('required'); base64Receipt = ""; document.getElementById('fileName').innerText = "";
+            }
         }
 
         function previewFile() {
             const file = document.getElementById('receiptImage').files[0];
             if (file) {
-                document.getElementById('fileName').innerText = "✅ تم اختيار: " + file.name;
+                if(file.size > 3 * 1024 * 1024) { 
+                    alert('حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 3 ميجابايت.');
+                    document.getElementById('receiptImage').value = ""; return;
+                }
+                document.getElementById('fileName').innerText = "✅ تم الإرفاق: " + file.name;
                 const reader = new FileReader();
-                reader.onloadend = () => {
+                reader.onloadend = function () {
                     const result = reader.result;
                     base64Receipt = result.split(',')[1];
                     receiptMime = result.split(';')[0].split(':')[1];
@@ -202,47 +294,90 @@
             }
         }
 
+        function generateRandomCode() {
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const numbers = '0123456789'; let code = '';
+            for (let i = 0; i < 5; i++) code += letters.charAt(Math.floor(Math.random() * letters.length));
+            for (let i = 0; i < 14; i++) code += numbers.charAt(Math.floor(Math.random() * numbers.length));
+            return code;
+        }
+
+        const nameInput = document.getElementById('fullName'); const nameError = document.getElementById('nameError');
+        nameInput.addEventListener('input', function() {
+            if (this.value !== "" && !/^[\u0600-\u06FF\s]+$/.test(this.value)) { this.classList.add('invalid-input'); nameError.style.display = 'block'; } else { this.classList.remove('invalid-input'); nameError.style.display = 'none'; }
+        });
+
+        const idInput = document.getElementById('nationalId'); const idError = document.getElementById('idError');
+        idInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 0 && this.value.length !== 14) { this.classList.add('invalid-input'); idError.style.display = 'block'; } else { this.classList.remove('invalid-input'); idError.style.display = 'none'; }
+        });
+
+        const emailInput = document.getElementById('emailUser');
+        emailInput.addEventListener('input', function() {
+            if (this.value.includes('@')) { this.value = this.value.split('@')[0]; }
+            this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
+        });
+
+        // 🔗 اللينك الجديد من الصورة اللي إنت بعتها 🔗
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyf9NYTnyE6GYZMNr51EKY15SdBDJ5ZSz4O1auzIXTvl0MMPHw9HT4a4ZKh-9-DL7Ne_A/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const payMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            if (payMethod === "InstaPay" && !base64Receipt) { alert('يرجى إرفاق الإيصال!'); return; }
+            
+            if (!/^[\u0600-\u06FF\s]+$/.test(nameInput.value) || nameInput.value.trim().split(' ').length < 3) { alert('عذراً، يجب كتابة الاسم ثلاثي باللغة العربية بشكل صحيح.'); return; }
+            if (!/^\d{14}$/.test(idInput.value)) { alert('عذراً، يجب إدخال 14 رقم بشكل صحيح.'); return; }
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true; document.getElementById('btnText').innerText = "جاري الحفظ..."; document.getElementById('btnSpinner').style.display = "block";
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            if (paymentMethod === "InstaPay" && !base64Receipt) { alert('يرجى اختيار صورة الإيصال لتأكيد الدفع!'); return; }
+
+            const submitBtn = document.getElementById('submitBtn'); const btnText = document.getElementById('btnText'); const btnSpinner = document.getElementById('btnSpinner');
+            submitBtn.disabled = true; btnText.innerText = "جاري رفع البيانات..."; btnSpinner.style.display = "block";
 
             const data = {
                 itemChoice: document.querySelector('input[name="itemChoice"]:checked').value,
                 price: document.querySelector('input[name="itemChoice"]:checked').getAttribute('data-price'),
-                fullName: document.getElementById('fullName').value,
-                nationalId: document.getElementById('nationalId').value,
+                fullName: nameInput.value,
+                nationalId: idInput.value,
                 status: document.getElementById('status').value,
-                emailUser: document.getElementById('emailUser').value,
+                emailUser: emailInput.value,
                 emailDomain: document.getElementById('emailDomain').value,
-                barcode: "K-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                paymentMethod: payMethod,
+                barcode: generateRandomCode(),
+                paymentMethod: paymentMethod,
                 receiptBase64: base64Receipt,
                 receiptMimeType: receiptMime
             };
 
-            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) })
-            .then(() => {
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(data),
+                redirect: 'follow'
+            })
+            .then(response => response.json())
+            .then(result => {
                 document.getElementById('bookingForm').style.display = 'none';
-                if (payMethod === 'InstaPay') {
+                document.querySelector('.header-section').style.display = 'none';
+                
+                if (result.status === 'instapay_success') {
                     document.getElementById('successMessage').style.display = 'block';
-                } else {
+                } else if (result.status === 'cash_success') {
                     document.getElementById('resultArea').style.display = 'block';
-                    new QRCode(document.getElementById("qrcode"), { text: data.barcode, width: 250, height: 250 });
-                    document.getElementById('displayChoice').innerText = data.itemChoice;
-                    document.getElementById('displayPrice').innerText = `EGP ${data.price}`;
+                    new QRCode(document.getElementById("qrcode"), { text: result.barcode, width: 600, height: 600, colorDark : "#0f172a", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                    document.getElementById('displayChoice').innerText = result.choiceName;
+                    document.getElementById('displayPrice').innerText = `L.E: ${result.price}`;
+                } else if (result.status === 'duplicate') {
+                    alert('عذراً، هذا الرقم القومي أو الإيميل مسجل مسبقاً!');
+                    location.reload();
                 }
             })
-            .catch(() => alert('حدث خطأ، يرجى المحاولة مرة أخرى.'));
+            .catch(error => {
+                alert('حدث خطأ في الاتصال، يرجى التأكد من الإنترنت والمحاولة مرة أخرى.');
+                submitBtn.disabled = false; btnText.innerText = "تأكيد التسجيل"; btnSpinner.style.display = "none";
+            });
         });
 
         function downloadTicket() {
-            html2canvas(document.getElementById('ticketCard')).then(canvas => {
+            html2canvas(document.getElementById('ticketCard'), { scale: 3 }).then(canvas => {
                 let link = document.createElement('a'); link.download = 'Ticket.png'; link.href = canvas.toDataURL(); link.click();
             });
         }
