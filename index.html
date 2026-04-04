@@ -10,76 +10,189 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <style>
+        /* 🧪 التنسيق العام والفخامة 🧪 */
         body { margin: 0; font-family: 'Tajawal', sans-serif; background-color: #020617; color: #ffffff; overflow-x: hidden; min-height: 100vh; }
+        
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(-45deg, #020617, #0f172a, #082f49, #022c22); background-size: 400% 400%; animation: gradientBG 20s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .glass-panel { background: rgba(5, 10, 20, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        
+        .glass-panel { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin-bottom: 30px; }
         .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
+        
         .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(0, 229, 255, 0.4); padding-bottom: 20px; }
         h2.main-title { color: #ffffff; font-size: 38px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); font-family: 'Amiri', serif; }
         h3.pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 10px 0; font-family: 'Amiri', serif; }
+        .booking-date { color: #10b981; font-size: 17px; font-weight: bold; margin-bottom: 8px; }
+
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #f8fafc; }
         input[type="text"], input[type="number"], select { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 16px; }
         input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); }
+        
         .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
         .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; background: transparent; }
         .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
+        .email-group span { font-weight: bold; font-size: 20px; color: #00e5ff; font-family: 'Amiri', serif; }
+        
+        /* 🟢 تنسيق قائمة الاختيارات بالكامل 🟢 */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
         .choice-card { border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.03); display: flex; align-items: center; direction: ltr; text-align: left; transition: 0.3s;}
         .choice-card:hover, .choice-card:has(input:checked) { background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; transform: translateX(5px); }
+        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #00e5ff; flex-shrink: 0; }
+        .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; flex-shrink: 0; }
+        .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #ffffff; line-height: 1.4; }
+        .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; }
+
         .payment-methods { display: flex; gap: 15px; margin-bottom: 20px; }
         .pay-method { flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 10px;}
-        .pay-method:has(input:checked) { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
+        .pay-method:hover, .pay-method:has(input:checked) { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); }
         .pay-method input { display: none; }
+        .pay-icon { width: 40px; height: 40px; }
+
         .instapay-section { display: none; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); text-align: center; margin-bottom: 20px; }
-        .instapay-link-btn { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 25px; border-radius: 10px; font-weight: bold; text-decoration: none; width: 100%; box-sizing: border-box;}
+        .instapay-link-btn { display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 25px; border-radius: 10px; font-weight: bold; font-size: 18px; margin: 15px 0; border: 1px solid #8b5cf6; text-decoration: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4); width: 100%; box-sizing: border-box;}
+        
         .upload-btn { background: rgba(255,255,255,0.05); color: #38bdf8; padding: 15px 25px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; margin-top: 10px; border: 1px dashed #38bdf8; width: 100%; box-sizing: border-box;}
         .upload-btn input { display: none; }
-        button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        button.submit-btn:disabled { background: #475569; }
+
+        button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        button.submit-btn:disabled { background: #475569; border-color: #475569; }
+
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 1px dashed rgba(0, 229, 255, 0.4); padding-top: 20px; }
         #ticketCard { background: #ffffff; color: #000; padding: 30px; border: 4px solid #0284c7; border-radius: 12px; display: inline-block; margin-bottom: 20px; width: 100%; box-sizing: border-box;}
+        
         .success-message { display: none; text-align: center; padding: 40px 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 15px; margin-top: 20px;}
+        
         .footer-copyright { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; color: #cbd5e1; direction: ltr; }
+        .footer-copyright span a { color: #00e5ff; font-weight: bold; text-decoration: none; }
+
         .invalid-input { border: 1px solid #ef4444 !important; }
         .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
+
+        @media (max-width: 600px) { .container { margin: 10px; padding: 20px 15px; } }
     </style>
 </head>
 <body>
+
     <div id="particles-js"></div>
+
     <div class="container glass-panel">
+        
         <div class="header-section">
             <h2 class="main-title">Kinetic CD Reverse</h2>
             <h3 class="pricing-title">Price of E-learning CD</h3>
-            <div style="color: #10b981; font-weight: bold;">الحجز يبدأ من 11 فبراير حتى 11 مارس 2026</div>
+            <div class="booking-date">الحجز يبدأ من 11 فبراير حتى 11 مارس 2026</div>
+            <div style="color: #cbd5e1; font-size: 14px;">للطالب يختار ما يلزمه</div>
         </div>
         
         <form id="bookingForm">
             <div class="form-group">
                 <div class="choices-list">
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required><div class="choice-text-container"><span class="choice-title">Course + [397 Questions for Training]</span><span class="choice-price">EGP 200</span></div></label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200"><div class="choice-text-container"><span class="choice-title">Problems [1404 Questions]</span><span class="choice-price">EGP 200</span></div></label>
-                    <label class="choice-card"><input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600"><div class="choice-text-container"><span class="choice-title">Full Package [2375 Questions]</span><span class="choice-price">EGP 600</span></div></label>
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required>
+                        <img src="C.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + [397 Questions for Training with Answers]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200">
+                        <img src="P.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems [1404 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Final Examination [575 Questions]" data-price="200">
+                        <img src="E.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Final Examination [575 Questions With Answer]</span>
+                            <span class="choice-price">EGP 200</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Problem [ 1801 Questions]" data-price="400">
+                        <img src="CP.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Problem [ 1801 Questions and Problems with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Course + Examination [971 Questions]" data-price="400">
+                        <img src="CE.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Course + Examination [971 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Problems + Examination [1980 Questions]" data-price="400">
+                        <img src="PEsvg.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Problems + Examination [1980 Questions with Answer]</span>
+                            <span class="choice-price">EGP 400</span>
+                        </div>
+                    </label>
+
+                    <label class="choice-card">
+                        <input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600">
+                        <img src="CPE.svg" class="choice-thumb">
+                        <div class="choice-text-container">
+                            <span class="choice-title">Full Package [ 2375 Questions With Answer]</span>
+                            <span class="choice-price">EGP 600</span>
+                        </div>
+                    </label>
                 </div>
             </div>
 
             <div class="form-group"><label>الاسم ثلاثي (باللغة العربية):</label><input type="text" id="fullName" required><div id="nameError" class="error-message">❌ يرجى كتابة الاسم بالعربية!</div></div>
             
-            <div class="form-group"><label>الرقم القومى (14 رقم):</label><input type="text" id="nationalId" maxlength="14" required><div id="idError" class="error-message">❌ الرقم القومي غير صحيح! (يجب أن يبدأ برقم 3)</div></div>
-            
+            <div class="form-group">
+                <label>الرقم القومى (14 رقم):</label>
+                <input type="text" id="nationalId" maxlength="14" required>
+                <div id="idError" class="error-message">❌ الرقم القومي يجب أن يتكون من 14 رقم ويبدأ برقم 3!</div>
+            </div>
+
             <div class="form-group"><label>الفرقة:</label><select id="status" required><option value="">-- اختر --</option><option value="رابعة (مستجد)">رابعة (مستجد)</option><option value="خريج">خريج</option></select></div>
-            <div class="form-group"><label>البريد الإلكتروني:</label><div class="email-group"><input type="text" id="emailUser" required><span>@</span><select id="emailDomain" required><option value="gmail.com">gmail.com</option><option value="hotmail.com">hotmail.com</option></select></div></div>
+            
+            <div class="form-group">
+                <label>البريد الإلكتروني:</label>
+                <div class="email-group">
+                    <input type="text" id="emailUser" required><span>@</span>
+                    <select id="emailDomain" required><option value="gmail.com">gmail.com</option><option value="icloud.com">icloud.com</option><option value="hotmail.com">hotmail.com</option><option value="yahoo.com">yahoo.com</option></select>
+                </div>
+            </div>
 
             <div class="form-group">
                 <label style="color: #38bdf8;">طريقة الدفع:</label>
                 <div class="payment-methods">
-                    <label class="pay-method" onclick="togglePayment('cash')"><input type="radio" name="paymentMethod" value="Cash" checked><div>نقدي بالمقر</div></label>
-                    <label class="pay-method" onclick="togglePayment('instapay')"><input type="radio" name="paymentMethod" value="InstaPay"><div>InstaPay</div></label>
+                    <label class="pay-method" onclick="togglePayment('cash')">
+                        <input type="radio" name="paymentMethod" value="Cash" checked>
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle></svg>
+                        <div>نقدي بالمقر</div>
+                    </label>
+                    <label class="pay-method" onclick="togglePayment('instapay')">
+                        <input type="radio" name="paymentMethod" value="InstaPay">
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                        <div>InstaPay</div>
+                    </label>
                 </div>
+                
                 <div id="instapayDetails" class="instapay-section">
+                    <p style="color: #e2e8f0;">أتمم الدفع عبر اللينك التالي:</p>
                     <a href="https://ipn.eg/S/al-ahlym/instapay/2XMFNv" target="_blank" class="instapay-link-btn">Click to pay</a>
-                    <label class="upload-btn">📷 إرفاق الإيصال (صور أو PDF)<input type="file" id="receiptImage" accept="image/*,application/pdf" onchange="previewFile()"></label>
+                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                    <p style="color: #e2e8f0;">ارفع سكرين شوت أو ملف الإيصال:</p>
+                    <label class="upload-btn">📷 إرفاق الإيصال<input type="file" id="receiptImage" accept="image/*,application/pdf" onchange="previewFile()"></label>
                     <div id="fileName" style="margin-top:10px; color:#38bdf8; font-weight: bold;"></div>
                 </div>
             </div>
@@ -91,9 +204,10 @@
             <div style="font-size: 18px; color: #00e5ff; margin-bottom: 10px;">أبرز التذكرة للمنسق للدفع نقداً</div>
             <div id="ticketCard">
                 <div id="qrcode" style="display: flex; justify-content: center; margin: 15px 0;"></div>
-                <h4 id="displayChoice"></h4><h4 id="displayPrice" style="color: #d9534f;"></h4>
+                <h4 id="displayChoice"></h4>
+                <h4 id="displayPrice" style="color: #d9534f; font-size: 24px;"></h4>
             </div>
-            <br><button onclick="downloadTicket()" style="background:#10b981; color:white; padding:10px; border:none; border-radius:8px; cursor:pointer;">Download Ticket</button>
+            <br><button onclick="downloadTicket()" style="background:#10b981; color:white; padding:12px 25px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Download Ticket</button>
         </div>
 
         <div id="successMessage" class="success-message">
@@ -101,11 +215,12 @@
             <p>سيصلك إيميل تأكيد الدفع وبيانات الـ CD قريباً.</p>
         </div>
 
-        <div class="footer-copyright">&copy; 2026 | Developed by <span>Ali Bilal</span></div>
+        <div class="footer-copyright">&copy; 2026 | Developed by <span><a href="mailto:alibilalxi@hotmail.com">Ali Bilal</a></span></div>
     </div>
 
     <script>
-        particlesJS("particles-js", { "particles": { "number": { "value": 130 }, "color": { "value": "#00e5ff" }, "opacity": { "value": 0.8 }, "size": { "value": 4 }, "line_linked": { "enable": true, "distance": 160, "color": "#00e5ff" }, "move": { "enable": true, "speed": 2.5 } } });
+        // الجزيئات المتحركة
+        particlesJS("particles-js", { "particles": { "number": { "value": 130 }, "color": { "value": "#00e5ff" }, "opacity": { "value": 0.8 }, "size": { "value": 4 }, "line_linked": { "enable": true, "distance": 160, "color": "#00e5ff" }, "move": { "enable": true, "speed": 2.5 } }, "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" } }, "modes": { "grab": { "distance": 220, "line_linked": { "opacity": 0.9 } } } } });
 
         let base64Receipt = ""; let receiptMime = "";
         function togglePayment(method) { document.getElementById('instapayDetails').style.display = (method === 'instapay') ? 'block' : 'none'; }
@@ -114,12 +229,12 @@
             if (file) {
                 document.getElementById('fileName').innerText = "✅ تم اختيار: " + file.name;
                 const reader = new FileReader();
-                reader.onloadend = () => { base64Receipt = reader.result.split(',')[1]; receiptMime = reader.result.split(';')[0].split(':')[1]; }
+                reader.onloadend = () => { base64Receipt = reader.result.split(',')[1]; receiptMime = result.split(';')[0].split(':')[1]; }
                 reader.readAsDataURL(file);
             }
         }
 
-        // 🛑 فحص الرقم القومي 🛑
+        // 🛑 فحص الرقم القومي (يبدأ بـ 3) 🛑
         const idInput = document.getElementById('nationalId');
         idInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '');
@@ -157,13 +272,15 @@
                 document.getElementById('bookingForm').style.display = 'none';
                 document.querySelector('.header-section').style.display = 'none';
                 
-                // 🔄 لو الطالب مسجل قبل كدة (كاش) يعرضله تذكرته تاني 🔄
-                if (result.status === 'duplicate' && result.method === 'Cash') {
-                    alert('أنت مسجل بالفعل! جاري عرض تذكرتك السابقة...');
-                    showTicket(result.barcode, result.choiceName, result.price);
-                } else if (result.status === 'duplicate' && result.method === 'InstaPay') {
-                    document.getElementById('successMessage').style.display = 'block';
-                    document.getElementById('successMessage').innerHTML = "<h3>أنت مسجل بالفعل عبر InstaPay!</h3><p>طلبك قيد المراجعة حالياً، سيصلك إيميل قريباً.</p>";
+                // 🔄 استعادة التذكرة لو مسجل قبل كدة 🔄
+                if (result.status === 'duplicate') {
+                    if(result.method === 'Cash') {
+                        alert('أنت مسجل بالفعل! جاري عرض تذكرتك السابقة...');
+                        showTicket(result.barcode, result.choiceName, result.price);
+                    } else {
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('successMessage').innerHTML = "<h3>أنت مسجل بالفعل عبر InstaPay!</h3><p>طلبك قيد المراجعة حالياً، سيصلك إيميل قريباً.</p>";
+                    }
                 } else if (result.status === 'instapay_success') {
                     document.getElementById('successMessage').style.display = 'block';
                 } else {
@@ -175,13 +292,13 @@
         function showTicket(bc, ch, pr) {
             document.getElementById('resultArea').style.display = 'block';
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), { text: bc, width: 250, height: 250 });
+            new QRCode(document.getElementById("qrcode"), { text: bc, width: 300, height: 300 });
             document.getElementById('displayChoice').innerText = ch;
-            document.getElementById('displayPrice').innerText = `EGP ${pr}`;
+            document.getElementById('displayPrice').innerText = `L.E: ${pr}`;
         }
 
         function downloadTicket() {
-            html2canvas(document.getElementById('ticketCard')).then(canvas => {
+            html2canvas(document.getElementById('ticketCard'), { scale: 3 }).then(canvas => {
                 let link = document.createElement('a'); link.download = 'Ticket.png'; link.href = canvas.toDataURL(); link.click();
             });
         }
