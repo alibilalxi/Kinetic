@@ -11,17 +11,17 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <style>
-        /* 🧪 الخلفية الداكنة الأساسية 🧪 */
+        /* الخلفية الداكنة الأساسية */
         body { 
             margin: 0; 
             font-family: 'Tajawal', sans-serif; 
-            background-color: #020617; /* أسود كحلي غامق جداً لإبراز النيون */
+            background-color: #020617; 
             color: #ffffff; 
             overflow-x: hidden; 
             min-height: 100vh;
         }
 
-        /* 💨 حاوية الجزيئات (واضحة جداً الآن) 💨 */
+        /* حاوية الجزيئات */
         #particles-js {
             position: fixed;
             width: 100%;
@@ -40,15 +40,16 @@
             100% { background-position: 0% 50%; }
         }
         
-        /* 💎 بوكس الحجز (شفافية عالية جداً لإظهار الخلفية) 💎 */
+        /* 💎 التعديل الجذري هنا: بوكس الحجز (شفافية فائقة ولون مختلف) 💎 */
         .glass-panel {
-            /* خففنا اللون جداً عشان الخلفية تنطق */
-            background: rgba(5, 10, 20, 0.3); 
-            backdrop-filter: blur(8px); /* تقليل الضبابية لرؤية أوضح */
-            -webkit-backdrop-filter: blur(8px); 
+            /* لون أبيض شفاف جداً (3%) عشان يكسر العتمة ويبين كل حاجة وراه */
+            background: rgba(255, 255, 255, 0.03); 
+            /* بلور خفيف جداً عشان ميعملش بلوك للخلفية على الموبايل */
+            backdrop-filter: blur(3px); 
+            -webkit-backdrop-filter: blur(3px); 
             border: 1px solid rgba(0, 229, 255, 0.3); /* إطار نيون واضح */
             border-radius: 20px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(0, 229, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 15px rgba(255, 255, 255, 0.05);
         }
 
         .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
@@ -64,16 +65,17 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #f8fafc; }
         
+        /* الحقول شفافة برضه */
         input[type="text"], input[type="number"], select { 
             width: 100%; padding: 14px; 
-            background: rgba(0, 0, 0, 0.5); 
+            background: rgba(255, 255, 255, 0.05); 
             border: 1px solid rgba(255, 255, 255, 0.2); 
             color: #fff; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 16px; 
         }
-        input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); background: rgba(0, 0, 0, 0.7); }
+        input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.5); background: rgba(0, 0, 0, 0.5); }
         option { background: #0f172a; color: #fff; }
         
-        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
+        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(255,255,255,0.03); padding: 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; }
         .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; box-shadow: none; background: transparent; }
         .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
         .email-group span { font-weight: bold; font-size: 20px; color: #00e5ff; font-family: 'Amiri', serif; }
@@ -81,9 +83,9 @@
         .invalid-input { border: 1px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
         .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        /* قايمة الاختيارات */
+        /* قايمة الاختيارات - شفافة جداً */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
-        .choice-card { border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
+        .choice-card { border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
         .choice-card:hover, .choice-card:has(input:checked) { background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
         .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #00e5ff; }
         
@@ -106,7 +108,7 @@
         #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; font-size: 18px; }
         .ticket-note { font-size: 20px; color: #00e5ff; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 5px rgba(0,229,255,0.5);}
 
-        /* الفوتر */
+        /* الفوتر برابط علي بلال */
         .footer-copyright {
             text-align: center;
             margin-top: 30px;
@@ -291,22 +293,22 @@
     </div>
 
     <script>
-        // 🚀 إعدادات الجزيئات الجديدة (مغناطيسية وتفاعلية بقوة) 🚀
+        // إعدادات الجزيئات
         particlesJS("particles-js", {
           "particles": {
             "number": {
-              "value": 130, // زيادة عدد الجزيئات
+              "value": 130, 
               "density": { "enable": true, "value_area": 800 }
             },
-            "color": { "value": "#00e5ff" }, // لون الجزيئات نيون صريح
+            "color": { "value": "#00e5ff" }, 
             "shape": { "type": "circle" },
             "opacity": {
-              "value": 0.7, // رفع إضاءة الجزيئات
+              "value": 0.8, 
               "random": true,
-              "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } // وميض خفيف
+              "anim": { "enable": true, "speed": 1, "opacity_min": 0.2, "sync": false } 
             },
             "size": {
-              "value": 4, // تكبير حجم الجزيئات
+              "value": 4, 
               "random": true,
               "anim": { "enable": false }
             },
@@ -314,13 +316,13 @@
               "enable": true,
               "distance": 160, 
               "color": "#00e5ff", 
-              "opacity": 0.5, // رفع إضاءة الخطوط
-              "width": 2 // تغليظ الخطوط
+              "opacity": 0.6, 
+              "width": 2 
             },
             "move": {
               "enable": true,
-              "speed": 2.5, // سرعة حركة أعلى قليلاً
-              "direction": "none", // حركة عشوائية للروابط
+              "speed": 2.5, 
+              "direction": "none", 
               "random": true,
               "straight": false,
               "out_mode": "out",
@@ -332,18 +334,18 @@
             "events": {
               "onhover": {
                 "enable": true,
-                "mode": "grab" // السحر هنا! تأثير المغناطيس مع صباعك أو الماوس
+                "mode": "grab" 
               },
               "onclick": {
                 "enable": true,
-                "mode": "push" // توليد جزيئات عند الضغط
+                "mode": "push" 
               },
               "resize": true
             },
             "modes": {
               "grab": {
-                "distance": 220, // قوة المغناطيس
-                "line_linked": { "opacity": 0.9 } // الخطوط تنور لما تمسكها
+                "distance": 220, 
+                "line_linked": { "opacity": 0.9 } 
               },
               "push": { "particles_nb": 4 }
             }
@@ -351,7 +353,7 @@
           "retina_detect": true
         });
 
-        // باقي الأكواد زي ما هي
+        // دوال الكود الأساسية
         function generateRandomCode() {
             const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             const numbers = '0123456789';
