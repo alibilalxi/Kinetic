@@ -10,15 +10,16 @@
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
     <style>
+        /* 🧪 الخلفية الداكنة 🧪 */
         body { margin: 0; font-family: 'Tajawal', sans-serif; background-color: #020617; color: #ffffff; overflow-x: hidden; min-height: 100vh; }
-        
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; background: linear-gradient(-45deg, #020617, #0f172a, #082f49, #022c22); background-size: 400% 400%; animation: gradientBG 20s ease infinite; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        /* البوكس الشفاف جداً */
+        /* 💎 البوكس الشفاف 💎 */
         .glass-panel { background: rgba(5, 10, 20, 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(0, 229, 255, 0.1); }
         .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
         
+        /* العناوين */
         .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(0, 229, 255, 0.4); padding-bottom: 20px; }
         h2.main-title { color: #ffffff; font-size: 38px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.9); font-family: 'Amiri', serif; }
         h3.pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 10px 0; font-family: 'Amiri', serif; }
@@ -32,7 +33,7 @@
         option { background: #0f172a; color: #fff; }
         
         .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
-        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; box-shadow: none; background: transparent; }
+        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; background: transparent; }
         .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
         .email-group span { font-weight: bold; font-size: 20px; color: #00e5ff; font-family: 'Amiri', serif; }
         
@@ -45,19 +46,26 @@
         .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #ffffff; line-height: 1.4; }
         .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; text-shadow: 0 0 5px rgba(245, 158, 11, 0.4);}
 
-        /* 🟢 طرق الدفع 🟢 */
+        /* 🟢 طرق الدفع الكلاسيكية الاحترافية 🟢 */
         .payment-methods { display: flex; gap: 15px; margin-bottom: 20px; }
-        .pay-method { flex: 1; text-align: center; border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.3); }
-        .pay-method:hover, .pay-method:has(input:checked) { border-color: #10b981; background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);}
+        .pay-method { flex: 1; text-align: center; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;}
+        .pay-method:hover, .pay-method:has(input:checked) { border-color: #38bdf8; background: rgba(56, 189, 248, 0.1); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);}
         .pay-method input { display: none; }
-        .pay-method span { display: block; font-size: 30px; margin-bottom: 5px; }
-        .pay-method div { font-weight: bold; color: #fff; }
+        .pay-icon { width: 40px; height: 40px; }
+        .pay-method div { font-weight: bold; color: #fff; font-size: 16px; }
 
-        .instapay-section { display: none; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; border: 1px dashed #10b981; text-align: center; margin-bottom: 20px; }
-        .instapay-address { font-size: 24px; color: #10b981; font-weight: bold; margin: 15px 0; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 5px; font-family: monospace; letter-spacing: 2px;}
-        .upload-btn { background: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: inline-block; font-weight: bold; margin-top: 10px; border: 1px solid #2563eb; transition: 0.3s;}
-        .upload-btn:hover { background: #2563eb; }
+        /* قسم انستا باي الاحترافي */
+        .instapay-section { display: none; background: rgba(0,0,0,0.6); padding: 25px; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.3); text-align: center; margin-bottom: 20px; }
+        
+        .instapay-btn { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold; text-decoration: none; font-size: 18px; margin: 15px 0; border: 1px solid #8b5cf6; transition: 0.3s; box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4); }
+        .instapay-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.6); }
+        .instapay-btn svg { width: 24px; height: 24px; fill: currentColor; }
+
+        .upload-btn { background: rgba(255,255,255,0.05); color: #38bdf8; padding: 15px 25px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: bold; margin-top: 10px; border: 1px dashed #38bdf8; transition: 0.3s; width: 100%; box-sizing: border-box;}
+        .upload-btn:hover { background: rgba(56, 189, 248, 0.1); }
         .upload-btn input { display: none; }
+        
+        .fallback-text { font-size: 13px; color: #94a3b8; margin-top: 10px; }
 
         button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 5px 20px rgba(2, 132, 199, 0.5);}
         button.submit-btn:hover { filter: brightness(1.2); box-shadow: 0 5px 30px rgba(2, 132, 199, 0.7); }
@@ -72,7 +80,7 @@
         #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; font-size: 18px; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; border: none; font-family: 'Tajawal', sans-serif; font-weight: bold;}
         .ticket-note { font-size: 20px; color: #00e5ff; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 5px rgba(0,229,255,0.5);}
 
-        .success-message { display: none; text-align: center; padding: 40px 20px; background: rgba(16, 185, 129, 0.1); border: 2px solid #10b981; border-radius: 15px; margin-top: 20px; backdrop-filter: blur(5px);}
+        .success-message { display: none; text-align: center; padding: 40px 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 15px; margin-top: 20px; backdrop-filter: blur(5px);}
         .success-message h3 { color: #10b981; font-size: 24px; margin-bottom: 15px; }
         .success-message p { color: #e2e8f0; font-size: 18px; line-height: 1.6; }
 
@@ -82,7 +90,7 @@
         .invalid-input { border: 1px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
         .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        @media (max-width: 600px) { .container { margin: 10px; padding: 20px 15px; } }
+        @media (max-width: 600px) { .container { margin: 10px; padding: 20px 15px; } .instapay-btn { padding: 12px 20px; font-size: 16px; } }
     </style>
 </head>
 <body>
@@ -111,55 +119,52 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>الاسم ثلاثي (باللغة العربية):</label>
-                <input type="text" id="fullName" placeholder="مثال: أحمد محمد علي" required>
-                <div id="nameError" class="error-message">❌ يرجى كتابة الاسم باللغة العربية فقط!</div>
-            </div>
-
-            <div class="form-group">
-                <label>الرقم القومى:</label>
-                <input type="text" id="nationalId" placeholder="NO.14" maxlength="14" required>
-                <div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه 14 رقم فقط.</div>
-            </div>
-
-            <div class="form-group">
-                <label>الـفرقة:</label>
-                <select id="status" required>
-                    <option value="">-- اختر حالتك --</option><option value="رابعة (مستجد)">رابعة (مستجد)</option><option value="رابعة (باق)">رابعة (باق)</option><option value="خريج">خريج</option>
-                </select>
-            </div>
-
+            <div class="form-group"><label>الاسم ثلاثي (باللغة العربية):</label><input type="text" id="fullName" required><div id="nameError" class="error-message">❌ يرجى كتابة الاسم باللغة العربية فقط!</div></div>
+            <div class="form-group"><label>الرقم القومى:</label><input type="text" id="nationalId" maxlength="14" required><div id="idError" class="error-message">❌ الرقم غير صحيح! تأكد أنه 14 رقم فقط.</div></div>
+            <div class="form-group"><label>الـفرقة:</label><select id="status" required><option value="">-- اختر حالتك --</option><option value="رابعة (مستجد)">رابعة (مستجد)</option><option value="رابعة (باق)">رابعة (باق)</option><option value="خريج">خريج</option></select></div>
             <div class="form-group">
                 <label>البريد الإلكتروني:</label>
                 <div class="email-group">
-                    <input type="text" id="emailUser" placeholder="username" required><span>@</span>
+                    <input type="text" id="emailUser" required><span>@</span>
                     <select id="emailDomain" required><option value="gmail.com">gmail.com</option><option value="icloud.com">icloud.com</option><option value="yahoo.com">yahoo.com</option><option value="outlook.com">outlook.com</option><option value="hotmail.com">hotmail.com</option></select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label style="color: #10b981; font-size: 18px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; margin-top: 10px;">اختر طريقة الدفع:</label>
+                <label style="color: #38bdf8; font-size: 18px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; margin-top: 10px;">اختر طريقة الدفع:</label>
                 <div class="payment-methods">
                     <label class="pay-method" onclick="togglePayment('cash')">
                         <input type="radio" name="paymentMethod" value="Cash" checked>
-                        <span>🤝</span><div>دفع نقدي بالمقر</div>
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>
+                        <div>دفع نقدي بالمقر</div>
                     </label>
                     <label class="pay-method" onclick="togglePayment('instapay')">
                         <input type="radio" name="paymentMethod" value="InstaPay">
-                        <span>⚡</span><div>InstaPay (أونلاين)</div>
+                        <svg class="pay-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                        <div>الدفع عبر InstaPay</div>
                     </label>
                 </div>
                 
                 <div id="instapayDetails" class="instapay-section">
-                    <p style="margin: 0; color: #e2e8f0;">قم بتحويل المبلغ المطلوب إلى حساب إنستا باي التالي:</p>
-                    <div class="instapay-address">al-ahlym</div>
-                    <p style="margin: 10px 0 0 0; color: #e2e8f0;">ثم قم برفع صورة (سكرين شوت) لإيصال التحويل لتأكيد الحجز</p>
+                    <p style="color: #e2e8f0; font-size: 16px; margin-bottom: 5px;">أتمم عملية الدفع بسهولة وأمان عبر تطبيق انستا باي</p>
+                    
+                    <a href="instapay://pay?pa=al-ahlym" class="instapay-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                        اضغط هنا للتحويل المباشر
+                    </a>
+                    
+                    <div class="fallback-text">إذا لم يفتح التطبيق، قم بتحويل المبلغ يدوياً إلى: <strong>al-ahlym</strong></div>
+                    
+                    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                    
+                    <p style="margin: 0 0 10px 0; color: #e2e8f0;">بعد التحويل، قم بإرفاق صورة الإيصال لتأكيد حجزك</p>
+                    
                     <label class="upload-btn">
-                        📷 رفع صورة الإيصال
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        إرفاق صورة الإيصال
                         <input type="file" id="receiptImage" accept="image/*" onchange="previewFile()">
                     </label>
-                    <div id="fileName" style="margin-top:10px; color:#fbbf24; font-size: 14px; font-weight: bold;"></div>
+                    <div id="fileName" style="margin-top:10px; color:#38bdf8; font-size: 14px; font-weight: bold;"></div>
                 </div>
             </div>
 
@@ -181,7 +186,7 @@
 
         <div id="successMessage" class="success-message">
             <h3>✅ تم استلام طلبك وإيصال الدفع!</h3>
-            <p>جاري مراجعة الإيصال من قبل الإدارة.<br>سيصلك بريد إلكتروني (Email) بتأكيد الدفع وبيانات الـ CD الخاصة بك في أقرب وقت.</p>
+            <p>جاري مراجعة الإيصال من قبل الإدارة.<br>سيصلك بريد إلكتروني (Email) بتأكيد الدفع وبيانات الـ CD الخاصة بك قريباً.</p>
         </div>
 
         <div class="footer-copyright">
@@ -209,10 +214,7 @@
               "onclick": { "enable": true, "mode": "push" },
               "resize": true
             },
-            "modes": {
-              "grab": { "distance": 220, "line_linked": { "opacity": 0.9 } },
-              "push": { "particles_nb": 4 }
-            }
+            "modes": { "grab": { "distance": 220, "line_linked": { "opacity": 0.9 } }, "push": { "particles_nb": 4 } }
           },
           "retina_detect": true
         });
@@ -238,13 +240,13 @@
         function previewFile() {
             const file = document.getElementById('receiptImage').files[0];
             if (file) {
-                // التأكد من حجم الصورة عشان متعملش Error في الـ Upload
-                if(file.size > 3 * 1024 * 1024) { // الحد الأقصى 3 ميجا
+                // التأكد إن الصورة متعديش 3 ميجا عشان متعملش Error في الرفع
+                if(file.size > 3 * 1024 * 1024) { 
                     alert('حجم الصورة كبير جداً، يرجى اختيار صورة أقل من 3 ميجابايت.');
                     document.getElementById('receiptImage').value = "";
                     return;
                 }
-                document.getElementById('fileName').innerText = "✅ تم اختيار الصورة: " + file.name;
+                document.getElementById('fileName').innerText = "✅ تم الإرفاق: " + file.name;
                 const reader = new FileReader();
                 reader.onloadend = function () {
                     const result = reader.result;
@@ -262,7 +264,6 @@
             return code;
         }
 
-        // الفالديشن (Validation)
         const nameInput = document.getElementById('fullName');
         const nameError = document.getElementById('nameError');
         nameInput.addEventListener('input', function() {
@@ -286,7 +287,7 @@
             this.value = this.value.replace(/[^a-zA-Z0-9._-]/g, '').toLowerCase();
         });
 
-        // 🔗 اللينك الجديد بتاعك محطوط هنا 🔗
+        // 🔗 لينك الاسكريبت الخاص بك 🔗
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUQbe1yl7hBEREfp7rftrj8qaVpEPgSosSqBgV6HWG9WWhaLiwkHvOTVQ3fYL8kn7nKw/exec';
 
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
@@ -301,7 +302,7 @@
 
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
             if (paymentMethod === "InstaPay" && !base64Receipt) {
-                alert('يرجى اختيار صورة الإيصال أولاً!'); return;
+                alert('يرجى اختيار صورة الإيصال لتأكيد الدفع!'); return;
             }
 
             const submitBtn = document.getElementById('submitBtn');
