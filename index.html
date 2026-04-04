@@ -8,86 +8,116 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        /* 🧪 الخلفية الكيميائية الاحترافية الفخمة 🧪 */
+        /* 🧪 الخلفية الداكنة الأساسية (معمل كيميائي داكن) 🧪 */
         body { 
             margin: 0; 
             font-family: 'Tajawal', sans-serif; 
-            background-color: #010409; /* لونFallback غامق جداً */
-            /* صورة احترافية لانفجار جزيئي ودخان علمي */
-            background-image: url('https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?q=80&w=1920&auto=format&fit=crop'); 
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed; /* الصورة ثابتة والكلام بيتحرك فوقها (تأثير بارالاكس) */
-            background-repeat: no-repeat;
+            background-color: #030712; /* أسود بلمحة زرقاء خفيفة جداً */
             color: #ffffff; 
             overflow-x: hidden; 
             min-height: 100vh;
+            position: relative;
         }
 
-        /* 💎 تأثير الإزاز الشفاف عالي التباين (مضمون للموبايل) 💎 */
+        /* ⬡ شبكة الروابط السداسية (ثابتة في الخلفية لتعزيز الشكل العلمي) ⬡ */
+        .chem-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; 
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 10L65 25v30L40 70 15 55V25z' fill='none' stroke='%2300e5ff' stroke-width='1.5'/%3E%3C/svg%3E");
+            animation: panBg 40s linear infinite;
+        }
+        @keyframes panBg { 100% { background-position: 160px 160px; } }
+
+        /* 💨 جزيئات الغاز والدخان الكيميائي المتحرك (CSS Pure) 💨 */
+        .gas-particles {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            bottom: -150px;
+            border-radius: 50%;
+            /* استخدام radial-gradient بيعطي تأثير الدخان/الغاز المضيء المتدرج بدون تقطيع على الموبايل */
+            animation: riseUp linear infinite;
+        }
+        /* برمجة أحجام وسرعات مختلفة لجزيئات الغاز */
+        .p1 { left: 10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, transparent 70%); animation-duration: 18s; animation-delay: 0s; }
+        .p2 { left: 80%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%); animation-duration: 22s; animation-delay: 4s; }
+        .p3 { left: 40%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%); animation-duration: 25s; animation-delay: 2s; }
+        .p4 { left: 60%; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%); animation-duration: 15s; animation-delay: 8s; }
+        .p5 { left: 25%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, transparent 70%); animation-duration: 20s; animation-delay: 12s; }
+
+        @keyframes riseUp {
+            0% { transform: translateY(0) scale(1) translateX(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-120vh) scale(2) translateX(100px); opacity: 0; }
+        }
+
+        /* 💎 البوكس الزجاجي (شفافية مدروسة + تباين عالي) 💎 */
         .glass-panel {
-            /* استخدمنا أسود شفاف Deep عشان التباين يكون عالي جداً مع الخلفية */
-            background: rgba(10, 15, 25, 0.75); 
-            border: 2px solid rgba(56, 189, 248, 0.3); /* إطار نيون أزرق سماوي خفيف يبرز الفورم */
+            /* لون كحلي غامق جداً بشفافية 85% لضمان إن الكلام هيفضل واضح 100% حتى لو الموبايل ضعيف */
+            background: rgba(8, 15, 28, 0.85); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px); 
+            border: 1px solid rgba(0, 229, 255, 0.25); 
             border-radius: 20px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 0 20px rgba(56, 189, 248, 0.05);
-            /* لغينا backdrop-filter لأنها بتبوظ على متصفحات الموبايل */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.05);
         }
 
         .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
         
-        /* تنسيق العناوين المعتمد */
-        .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(56, 189, 248, 0.3); padding-bottom: 20px; }
-        h2.main-title { color: #ffffff; font-size: 38px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(56, 189, 248, 0.8); font-family: 'Amiri', serif; }
-        h3.pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 10px 0; font-family: 'Amiri', serif; text-shadow: 0 0 10px rgba(245, 158, 11, 0.5); }
+        /* العناوين والألوان المتباينة */
+        .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(0, 229, 255, 0.3); padding-bottom: 20px; }
+        h2.main-title { color: #ffffff; font-size: 38px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.6); font-family: 'Amiri', serif; }
+        h3.pricing-title { color: #ffb300; font-size: 26px; margin: 0 0 10px 0; font-family: 'Amiri', serif; text-shadow: 0 0 10px rgba(255, 179, 0, 0.4); }
         .booking-date { color: #10b981; font-size: 17px; font-weight: bold; margin-bottom: 8px; }
-        .pricing-subtitle { color: #e2e8f0; font-size: 16px; margin: 0; }
+        .pricing-subtitle { color: #94a3b8; font-size: 16px; margin: 0; }
 
-        /* تظبيط الفورم مع الثيم الدارك */
+        /* الفورم */
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #f8fafc; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #e2e8f0; }
         
         input[type="text"], input[type="number"], select { 
             width: 100%; padding: 14px; 
-            background: rgba(0, 0, 0, 0.5); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(0, 0, 0, 0.6); 
+            border: 1px solid rgba(0, 229, 255, 0.2); 
             color: #fff; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 16px; 
         }
-        input:focus, select:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 12px rgba(56, 189, 248, 0.4); background: rgba(0, 0, 0, 0.7); }
+        input:focus, select:focus { border-color: #00e5ff; outline: none; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); background: rgba(0, 0, 0, 0.8); }
         option { background: #0f172a; color: #fff; }
         
-        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
+        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.4); padding: 10px; border: 1px solid rgba(0,229,255,0.2); border-radius: 8px; }
         .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; box-shadow: none; background: transparent; }
-        .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
-        .email-group span { font-weight: bold; font-size: 20px; color: #38bdf8; font-family: 'Amiri', serif; }
+        .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(0,0,0,0.5); }
+        .email-group span { font-weight: bold; font-size: 20px; color: #00e5ff; font-family: 'Amiri', serif; }
         
         .invalid-input { border: 1px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
         .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
-        /* قايمة الاختيارات الاحترافية */
+        /* قايمة الاختيارات */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
-        .choice-card { border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
-        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(56, 189, 248, 0.1); border-color: #38bdf8; transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #38bdf8; }
+        .choice-card { border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
+        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(0, 229, 255, 0.1); border-color: #00e5ff; transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #00e5ff; }
         
         .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; box-shadow: 0 0 10px rgba(255,255,255,0.1);}
         .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #f8fafc; line-height: 1.4; }
-        .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; text-shadow: 0 0 5px rgba(245, 158, 11, 0.3); }
+        .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #ffffff; line-height: 1.4; }
+        .choice-price { color: #ffb300; font-weight: bold; font-size: 16px; }
 
         /* الزرار */
-        button { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4); }
-        button:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 25px rgba(2, 132, 199, 0.6); }
-        button:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none;}
+        button { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: 1px solid rgba(0,229,255,0.5); border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4); }
+        button:hover { filter: brightness(1.2); box-shadow: 0 5px 25px rgba(2, 132, 199, 0.6); }
+        button:disabled { background: #475569; border-color: #475569; cursor: not-allowed; box-shadow: none;}
 
         .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* النتيجة والتذكرة */
-        #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 1px dashed rgba(255, 255, 255, 0.3); padding-top: 20px; }
+        #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 1px dashed rgba(0, 229, 255, 0.3); padding-top: 20px; }
         #ticketCard { background: #ffffff; color: #000; padding: 30px; border: 4px solid #0284c7; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;}
         #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; font-size: 18px; }
-        .ticket-note { font-size: 20px; color: #38bdf8; font-weight: bold; margin-bottom: 15px; }
+        .ticket-note { font-size: 20px; color: #00e5ff; font-weight: bold; margin-bottom: 15px; }
 
         /* 👑 الفوتر الخاص بحقوق الملكية مع رابط الإيميل 👑 */
         .footer-copyright {
@@ -101,22 +131,21 @@
             font-family: Tahoma, sans-serif;
         }
         .footer-copyright span a {
-            color: #38bdf8;
+            color: #00e5ff;
             font-weight: bold;
-            text-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
-            text-decoration: none; /* شيل الخط اللي تحت الاسم */
+            text-decoration: none;
             transition: 0.3s;
         }
         .footer-copyright span a:hover {
-            color: #fbbf24;
-            text-shadow: 0 0 10px rgba(251, 191, 36, 0.7);
+            color: #ffb300;
+            text-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
         }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #0f172a; border: 1px solid #38bdf8; padding: 30px 20px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 0 40px rgba(56, 189, 248, 0.3); color: white;}
+        .modal-box { background: #0f172a; border: 1px solid #00e5ff; padding: 30px 20px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 0 40px rgba(0, 229, 255, 0.2); color: white;}
         .modal-box h3 { color: #ef4444; margin-top: 0; font-size: 28px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 10px; font-family: 'Amiri', serif;}
         .modal-box p { font-size: 18px; font-weight: bold; margin-bottom: 25px; line-height: 1.5; }
-        .modal-btn { background: #fbbf24; color: #0f172a; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; border: none; font-weight: bold; cursor: pointer;}
+        .modal-btn { background: #ffb300; color: #000; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; border: none; font-weight: bold; cursor: pointer;}
 
         @media (max-width: 600px) {
             .container { margin: 20px 10px; padding: 25px 15px; }
@@ -129,6 +158,16 @@
     </style>
 </head>
 <body>
+
+    <div class="chem-pattern"></div>
+
+    <div class="gas-particles">
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+    </div>
 
     <div class="modal-overlay" id="duplicateModal">
         <div class="modal-box">
