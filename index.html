@@ -8,117 +8,129 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
-        /* الخلفية الكيميائية الفخمة (روابط سداسية وإضاءة) */
+        /* 🧪 الخلفية الكيميائية المتحركة 🧪 */
         body { 
             margin: 0; 
             font-family: 'Tajawal', sans-serif; 
-            background-color: #0b1320;
-            background-image: 
-                radial-gradient(circle at 15% 30%, rgba(14, 116, 144, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 85% 70%, rgba(16, 185, 129, 0.2) 0%, transparent 40%),
-                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0l20 11.5v23L20 40 0 28.5v-23z' fill-opacity='0.03' fill='%23ffffff' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-color: #040d1a; /* لون كحلي/بترولي عميق جداً */
+            /* باترن الروابط الكيميائية السداسية */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10L45 20v20L30 50 15 40V20z' fill='none' stroke='%2338bdf8' stroke-width='1' stroke-opacity='0.15'/%3E%3Cpath d='M30 10v15m15-5l-10 7m-20 0l10-7' stroke='%2310b981' stroke-width='1' stroke-opacity='0.1'/%3E%3Ccircle cx='30' cy='25' r='1.5' fill='%2338bdf8' fill-opacity='0.4'/%3E%3C/svg%3E");
             color: #f8fafc; 
             overflow-x: hidden; 
-        }
-        
-        h2, h3, h4 { font-family: 'Amiri', serif; }
-        
-        /* تأثير الإزاز الشفاف للفورم والجدول */
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 15px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            animation: panBackground 40s linear infinite; /* حركة الباترن */
         }
 
-        .container { max-width: 650px; margin: 40px auto; padding: 30px; position: relative; }
-        
-        h2.main-title { text-align: center; color: #38bdf8; font-size: 34px; margin-bottom: 25px; text-shadow: 0 2px 10px rgba(56, 189, 248, 0.3); }
-        
-        /* 💎 تصميم جدول الأسعار الجديد 💎 */
-        .pricing-section {
-            margin-bottom: 30px;
-            padding: 20px;
-            text-align: center;
+        @keyframes panBackground {
+            0% { background-position: 0 0; }
+            100% { background-position: 120px 120px; }
         }
-        .pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 5px 0; }
-        .pricing-subtitle { color: #cbd5e1; font-size: 16px; margin-bottom: 15px; }
+
+        /* الذرات المضيئة العائمة في الخلفية */
+        .glowing-orb { position: fixed; border-radius: 50%; filter: blur(60px); z-index: -1; }
+        .orb-1 { width: 350px; height: 350px; background: rgba(2, 132, 199, 0.25); top: -10%; left: -10%; animation: float 12s ease-in-out infinite alternate; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(16, 185, 129, 0.15); bottom: -10%; right: -10%; animation: float 15s ease-in-out infinite alternate-reverse; }
+        @keyframes float { 0% { transform: translate(0, 0); } 100% { transform: translate(60px, 60px); } }
         
-        .table-responsive { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .pricing-table { width: 100%; border-collapse: collapse; text-align: center; color: #e2e8f0; min-width: 500px; }
-        .pricing-table th { background: rgba(56, 189, 248, 0.15); padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 18px; color: #38bdf8; }
-        .pricing-table td { padding: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
-        .pricing-table tr:hover { background: rgba(255, 255, 255, 0.03); }
-        .pricing-table img { width: 45px; height: 45px; object-fit: contain; background: rgba(255,255,255,0.9); border-radius: 8px; padding: 3px; }
-        .td-title { text-align: left; direction: ltr; font-size: 13px; font-weight: bold; line-height: 1.4; color: #f8fafc;}
-        .td-price { color: #fbbf24; font-weight: bold; font-size: 15px; }
-        .pricing-footer { margin-top: 15px; font-size: 15px; color: #10b981; font-weight: bold; }
+        /* 💎 تأثير الإزاز الشفاف (عالي التباين) 💎 */
+        .glass-panel {
+            background: rgba(11, 20, 38, 0.75); /* لون داكن مع شفافية */
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(56, 189, 248, 0.2); /* إطار أزرق سماوي خفيف يبرز الفورم */
+            border-radius: 15px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.02);
+        }
+
+        .container { max-width: 650px; margin: 40px auto; padding: 35px 30px; position: relative; z-index: 1;}
+        
+        /* تنسيق العناوين الجديدة */
+        .header-section { text-align: center; margin-bottom: 35px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 20px; }
+        h2.main-title { color: #38bdf8; font-size: 36px; margin: 0 0 15px 0; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); font-family: 'Amiri', serif; }
+        h3.pricing-title { color: #fbbf24; font-size: 24px; margin: 0 0 10px 0; font-family: 'Amiri', serif; }
+        .booking-date { color: #10b981; font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+        .pricing-subtitle { color: #cbd5e1; font-size: 16px; margin: 0; }
 
         /* تظبيط الفورم مع الثيم الدارك */
         .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #cbd5e1; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 16px; color: #e2e8f0; }
         
         input[type="text"], input[type="number"], select { 
-            width: 100%; padding: 12px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
+            width: 100%; padding: 13px; 
+            background: rgba(0, 0, 0, 0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
             color: #fff; border-radius: 8px; box-sizing: border-box; transition: 0.3s; font-family: 'Tajawal', sans-serif; font-size: 15px; 
         }
-        input:focus, select:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); background: rgba(255, 255, 255, 0.1); }
-        option { background: #0f172a; color: #fff; } /* لون القائمة المنسدلة */
+        input:focus, select:focus { border-color: #38bdf8; outline: none; box-shadow: 0 0 12px rgba(56, 189, 248, 0.3); background: rgba(0, 0, 0, 0.5); }
+        option { background: #0f172a; color: #fff; }
         
-        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(255,255,255,0.02); padding: 10px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; }
-        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.2); margin: 0; box-shadow: none; font-family: Tahoma, sans-serif; }
-        .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.2); margin: 0; font-family: Tahoma, sans-serif; cursor: pointer; }
+        .email-group { display: flex; gap: 10px; direction: ltr; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; }
+        .email-group input { flex: 2; text-align: left; border: 1px solid rgba(255,255,255,0.1); margin: 0; box-shadow: none; background: transparent; }
+        .email-group select { flex: 1.2; border: 1px solid rgba(255,255,255,0.1); margin: 0; cursor: pointer; background: rgba(255,255,255,0.05); }
         .email-group span { font-weight: bold; font-size: 20px; color: #38bdf8; font-family: 'Amiri', serif; }
         
         .invalid-input { border: 1px solid #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; }
         .error-message { color: #ef4444; font-size: 14px; margin-top: 5px; display: none; font-weight: bold; }
 
+        /* قايمة الاختيارات الاحترافية */
         .choices-list { display: flex; flex-direction: column; gap: 12px; }
-        .choice-card { border: 1px solid rgba(255, 255, 255, 0.15); padding: 10px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.03); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
-        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(56, 189, 248, 0.1); border-color: #38bdf8; transform: translateY(-2px); }
+        .choice-card { border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 10px; cursor: pointer; background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; display: flex; align-items: center; direction: ltr; text-align: left; }
+        .choice-card:hover, .choice-card:has(input:checked) { background: rgba(56, 189, 248, 0.08); border-color: #38bdf8; transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .choice-card input { margin-right: 15px; margin-left: 0; transform: scale(1.4); cursor: pointer; accent-color: #38bdf8; }
         
-        .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; }
+        .choice-thumb { width: 55px; height: 55px; border-radius: 8px; margin-right: 15px; margin-left: 0; object-fit: contain; background-color: #ffffff; padding: 3px; box-shadow: 0 0 10px rgba(255,255,255,0.1);}
         .choice-text-container { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #f8fafc; line-height: 1.3; }
-        .choice-price { color: #fbbf24; font-weight: bold; font-size: 15px; }
+        .choice-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #f8fafc; line-height: 1.4; }
+        .choice-price { color: #fbbf24; font-weight: bold; font-size: 16px; }
 
-        button { width: 100%; padding: 15px; background: #0284c7; color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        button:hover { background: #0369a1; box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4); }
-        button:disabled { background: #475569; cursor: not-allowed; }
+        button { width: 100%; padding: 16px; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; border: none; border-radius: 8px; font-size: 20px; cursor: pointer; font-weight: bold; font-family: 'Tajawal', sans-serif; transition: 0.3s; margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(2, 132, 199, 0.3); }
+        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        button:disabled { background: #475569; cursor: not-allowed; transform: none; box-shadow: none;}
 
         .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         #resultArea { display: none; margin-top: 30px; text-align: center; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 20px; }
         #ticketCard { background: white; padding: 30px; border: 4px solid #0284c7; border-radius: 12px; display: inline-block; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; box-sizing: border-box;}
-        #downloadBtn { background: #10b981; font-size: 18px; }
-        #downloadBtn:hover { background: #059669; }
+        #downloadBtn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); font-size: 18px; }
         .ticket-note { font-size: 20px; color: #38bdf8; font-weight: bold; margin-bottom: 15px; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #1e293b; border: 2px solid #38bdf8; padding: 30px 20px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.6); color: white;}
-        .modal-box h3 { color: #ef4444; margin-top: 0; font-size: 28px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; }
+        .modal-box { background: #0f172a; border: 1px solid #38bdf8; padding: 30px 20px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 15px 30px rgba(0,0,0,0.6); color: white;}
+        .modal-box h3 { color: #ef4444; margin-top: 0; font-size: 28px; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 10px; font-family: 'Amiri', serif;}
         .modal-box p { font-size: 18px; font-weight: bold; margin-bottom: 25px; line-height: 1.5; }
         .modal-btn { background: #fbbf24; color: #0f172a; padding: 12px 25px; border-radius: 5px; font-family: 'Amiri', serif; font-size: 20px; border: none; font-weight: bold; cursor: pointer;}
         .modal-btn:hover { background: #f59e0b; }
 
+        /* 👑 الفوتر الخاص بحقوق الملكية 👑 */
+        .footer-copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            color: #94a3b8;
+            direction: ltr;
+            font-family: Tahoma, sans-serif;
+        }
+        .footer-copyright span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
         @media (max-width: 600px) {
-            .container { margin: 20px 10px; padding: 15px; }
-            h2.main-title { font-size: 26px; }
+            .container { margin: 20px 10px; padding: 25px 15px; }
+            h2.main-title { font-size: 28px; }
             .choice-thumb { width: 45px; height: 45px; }
-            .choice-title, .td-title { font-size: 12px; }
-            .pricing-title { font-size: 20px; }
-            .pricing-table th { font-size: 15px; padding: 8px;}
-            .pricing-table td { padding: 8px; }
+            .choice-title { font-size: 13px; }
+            .email-group { flex-direction: row; padding: 8px; }
+            .email-group input, .email-group select { font-size: 14px; }
         }
     </style>
 </head>
 <body>
+
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
 
     <div class="modal-overlay" id="duplicateModal">
         <div class="modal-box">
@@ -129,66 +141,16 @@
     </div>
 
     <div class="container glass-panel">
-        <h2 class="main-title">Kinetic CD Reverse</h2>
         
-        <div class="pricing-section glass-panel">
+        <div class="header-section">
+            <h2 class="main-title">Kinetic CD Reverse</h2>
             <h3 class="pricing-title">Price of E-learning CD</h3>
+            <div class="booking-date">الحجز يبدأ من 11 فبراير حتى 11 مارس 2026</div>
             <div class="pricing-subtitle">للطالب يختار ما يلزمه</div>
-            
-            <div class="table-responsive">
-                <table class="pricing-table">
-                    <thead>
-                        <tr>
-                            <th>Icon</th>
-                            <th>Title</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><img src="C.svg" alt="C"></td>
-                            <td class="td-title">Course + [397 Questions for Training with Answers]</td>
-                            <td class="td-price">200 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="P.svg" alt="P"></td>
-                            <td class="td-title">Problems [1404 Questions and Problems with Answer]</td>
-                            <td class="td-price">200 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="E.svg" alt="E"></td>
-                            <td class="td-title">Final Examination (Science & Education)<br>[575 Questions With Answer]</td>
-                            <td class="td-price">200 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="CPE.svg" alt="CPE"></td>
-                            <td class="td-title">Course + Problems + Examination<br>[ 2375 Question + Problems With Answer]</td>
-                            <td class="td-price">600 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="CP.svg" alt="CP"></td>
-                            <td class="td-title">Course + Problem<br>[ 1801 Questions and Problems with Answer]</td>
-                            <td class="td-price">400 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="CE.svg" alt="CE"></td>
-                            <td class="td-title">Course + Examination<br>[971 Questions with Answer]</td>
-                            <td class="td-price">400 L.E.</td>
-                        </tr>
-                        <tr>
-                            <td><img src="PEsvg.svg" alt="PE"></td>
-                            <td class="td-title">Problems + Examination<br>[1980 Questions with Answer]</td>
-                            <td class="td-price">400 L.E.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="pricing-footer">الحجز يبدأ من 11 فبراير حتى 11 مارس 2026</div>
         </div>
         
         <form id="bookingForm">
             <div class="form-group">
-                <label>اختر باقة الحجز المطلوبة:</label>
                 <div class="choices-list">
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + [397 Questions]" data-price="200" required>
@@ -198,6 +160,7 @@
                             <span class="choice-price">EGP 200</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Problems [1404 Questions]" data-price="200">
                         <img src="P.svg" alt="Problems" class="choice-thumb">
@@ -206,6 +169,7 @@
                             <span class="choice-price">EGP 200</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Final Examination [575 Questions]" data-price="200">
                         <img src="E.svg" alt="Exam" class="choice-thumb">
@@ -214,6 +178,7 @@
                             <span class="choice-price">EGP 200</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + Problem [ 1801 Questions]" data-price="400">
                         <img src="CP.svg" alt="Course + Problems" class="choice-thumb">
@@ -222,6 +187,7 @@
                             <span class="choice-price">EGP 400</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Course + Examination [971 Questions]" data-price="400">
                         <img src="CE.svg" alt="Course + Exam" class="choice-thumb">
@@ -230,6 +196,7 @@
                             <span class="choice-price">EGP 400</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Problems + Examination [1980 Questions]" data-price="400">
                         <img src="PEsvg.svg" alt="Problems + Exam" class="choice-thumb">
@@ -238,6 +205,7 @@
                             <span class="choice-price">EGP 400</span>
                         </div>
                     </label>
+                    
                     <label class="choice-card">
                         <input type="radio" name="itemChoice" value="Full Package [ 2375 Question]" data-price="600">
                         <img src="CPE.svg" alt="Full Package" class="choice-thumb">
@@ -302,6 +270,11 @@
             <br>
             <button id="downloadBtn" onclick="downloadTicket()">Download Ticket</button>
         </div>
+
+        <div class="footer-copyright">
+            &copy; 2026 All Rights Reserved | Developed by <span>Ali Bilal</span>
+        </div>
+
     </div>
 
     <script>
@@ -316,7 +289,6 @@
 
         function generateBarcodeUI(barcodeValue, choice, price) {
             document.getElementById('bookingForm').style.display = 'none';
-            document.querySelector('.pricing-section').style.display = 'none';
             document.getElementById('resultArea').style.display = 'block';
             
             document.getElementById('qrcode').innerHTML = ""; 
